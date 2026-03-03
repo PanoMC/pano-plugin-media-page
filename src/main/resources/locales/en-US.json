@@ -1,3 +1,158 @@
 {
-  "hello-world": "Hello world!"
+  "activity-logs": {
+    "CREATED_MEDIA_PAGE": "<b>{username}</b> created media page <b>{title}</b>.",
+    "UPDATED_MEDIA_PAGE": "<b>{username}</b> updated media page <b>{title}</b>.",
+    "DELETED_MEDIA_PAGE": "<b>{username}</b> deleted media page <b>{title}</b>.",
+    "UPLOADED_MEDIA": "<b>{username}</b> uploaded media <b>{fileName}</b>.",
+    "DELETED_MEDIA": "<b>{username}</b> deleted media <b>{fileName}</b>."
+  },
+  "permissions": {
+    "MANAGE_MEDIA_PAGE": {
+      "title": "Manage Media Pages",
+      "description": "Allows managing media gallery pages, categories, and media items."
+    }
+  },
+  "nav": "Media",
+  "media-pages": {
+    "list": {
+      "title": "Media Pages",
+      "total-count": "{count} Media Pages",
+      "add-page": "Create Page",
+      "table": {
+        "id": "ID",
+        "title": "Title",
+        "slug": "Slug",
+        "status": "Status",
+        "actions": "Actions",
+        "actions-edit": "Edit",
+        "actions-delete": "Delete"
+      },
+      "status": {
+        "active": "Active",
+        "passive": "Passive"
+      }
+    },
+    "editor": {
+      "create-title": "Create Media Page",
+      "edit-title": "Edit Media Page",
+      "back": "Media Pages",
+      "save": "Save",
+      "fields": {
+        "title": "Page Title",
+        "slug": "URL Slug",
+        "description": "Description",
+        "active": "Active",
+        "register-to-nav": "Show in Navigation"
+      },
+      "categories": {
+        "title": "Categories",
+        "add": "Add Category",
+        "hidden": "Hidden",
+        "toggle-visibility": "Toggle visibility",
+        "move": "Move to another page",
+        "empty-hint": "No categories added yet. You can add categories before creating the page.",
+        "cat-title": "Category Title",
+        "cat-title-placeholder": "e.g., Summer Event",
+        "cat-description": "Description (Optional)",
+        "cat-description-placeholder": "Optional description for this category",
+        "save-first-hint": "Save the page first to upload media."
+      },
+      "upload": {
+        "add-media": "Add Media",
+        "label": "Drag & drop files here or click to upload",
+        "hint": "Supports images and videos (max 100MB)"
+      },
+      "media": {
+        "edit": "Edit",
+        "delete": "Delete"
+      }
+    }
+  },
+  "errors": {
+    "SLUG_ALREADY_EXISTS": "A media page with this slug already exists.",
+    "ERROR_UNKNOWN": "Unknown error",
+    "ERROR_GENERAL": "An unexpected error occurred. Please try again later."
+  },
+  "modals": {
+    "delete-page": {
+      "description": "Are you sure you want to delete media page <b>{title}</b>? All categories and media items in this page will also be deleted. This action cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
+    "add-category": {
+      "title": "Add Category",
+      "fields": {
+        "title": "Category Title",
+        "description": "Description (optional)"
+      },
+      "save": "Add",
+      "cancel": "Cancel"
+    },
+    "edit-category": {
+      "title": "Edit Category",
+      "fields": {
+        "title": "Category Title",
+        "description": "Description (optional)"
+      },
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "delete-category": {
+      "description": "Are you sure you want to delete category <b>{title}</b>? All media items in this category will also be deleted.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
+    "edit-media": {
+      "title": "Edit Media",
+      "fields": {
+        "title": "Title",
+        "description": "Description"
+      },
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "delete-media": {
+      "description": "Are you sure you want to delete <b>{title}</b>? This action cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
+    "upload-media": {
+      "title": "Upload Media",
+      "fields": {
+        "title": "Title (optional)",
+        "title-placeholder": "Enter a title for the media...",
+        "description": "Description (optional)",
+        "description-placeholder": "Enter a description..."
+      },
+      "drop-label": "Drag & drop files here or click to browse",
+      "drop-hint": "Supports images and videos (max 100MB)",
+      "selected-count": "{count} file(s) selected",
+      "clear": "Clear all",
+      "upload": "Upload",
+      "cancel": "Cancel"
+    },
+    "move-category": {
+      "title": "Move Category",
+      "description": "Select a page to move <b>{title}</b> to:",
+      "select-page": "Select a page...",
+      "no-pages": "No other pages available.",
+      "move": "Move",
+      "cancel": "Cancel"
+    }
+  },
+  "toasts": {
+    "page-added": "Media page created successfully.",
+    "page-updated": "Media page updated successfully.",
+    "page-deleted": "Media page deleted successfully.",
+    "category-added": "Category added successfully.",
+    "category-updated": "Category updated successfully.",
+    "category-deleted": "Category deleted successfully.",
+    "media-uploaded": "Media uploaded successfully.",
+    "media-updated": "Media updated successfully.",
+    "media-deleted": "Media deleted successfully.",
+    "category-moved": "Category moved successfully.",
+    "error-saving": "Error while saving: {error}",
+    "error-deleting": "Error while deleting: {error}",
+    "error-uploading": "Error while uploading: {error}"
+  }
 }

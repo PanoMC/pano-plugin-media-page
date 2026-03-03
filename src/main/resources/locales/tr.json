@@ -1,3 +1,158 @@
 {
-  "hello-world": "Merhaba dünya!"
+  "activity-logs": {
+    "CREATED_MEDIA_PAGE": "<b>{username}</b>, <b>{title}</b> isimli medya sayfasını oluşturdu.",
+    "UPDATED_MEDIA_PAGE": "<b>{username}</b>, <b>{title}</b> isimli medya sayfasını güncelledi.",
+    "DELETED_MEDIA_PAGE": "<b>{username}</b>, <b>{title}</b> isimli medya sayfasını sildi.",
+    "UPLOADED_MEDIA": "<b>{username}</b>, <b>{fileName}</b> isimli medya dosyasını yükledi.",
+    "DELETED_MEDIA": "<b>{username}</b>, <b>{fileName}</b> isimli medya dosyasını sildi."
+  },
+  "permissions": {
+    "MANAGE_MEDIA_PAGE": {
+      "title": "Medya Sayfalarını Yönet",
+      "description": "Medya galeri sayfalarını, kategorileri ve medya öğelerini yönetmeye izin verir."
+    }
+  },
+  "nav": "Medya",
+  "media-pages": {
+    "list": {
+      "title": "Medya Sayfaları",
+      "total-count": "{count} Medya Sayfası",
+      "add-page": "Sayfa Oluştur",
+      "table": {
+        "id": "ID",
+        "title": "Başlık",
+        "slug": "URL Slug",
+        "status": "Durum",
+        "actions": "İşlemler",
+        "actions-edit": "Düzenle",
+        "actions-delete": "Sil"
+      },
+      "status": {
+        "active": "Aktif",
+        "passive": "Pasif"
+      }
+    },
+    "editor": {
+      "create-title": "Medya Sayfası Oluştur",
+      "edit-title": "Medya Sayfasını Düzenle",
+      "back": "Medya Sayfaları",
+      "save": "Kaydet",
+      "fields": {
+        "title": "Sayfa Başlığı",
+        "slug": "URL Slug",
+        "description": "Açıklama",
+        "active": "Aktif",
+        "register-to-nav": "Navigasyonda Göster"
+      },
+      "categories": {
+        "title": "Kategoriler",
+        "add": "Kategori Ekle",
+        "hidden": "Gizli",
+        "toggle-visibility": "Görünürlüğü değiştir",
+        "move": "Başka sayfaya taşı",
+        "empty-hint": "Henüz kategori eklenmedi. Sayfayı oluştururken aynı anda kategorileri de ekleyebilirsiniz.",
+        "cat-title": "Kategori Başlığı",
+        "cat-title-placeholder": "Örn: Yaz Etkinliği",
+        "cat-description": "Açıklama (İsteğe bağlı)",
+        "cat-description-placeholder": "Bu kategori için kısa bir açıklama",
+        "save-first-hint": "Medya yüklemek için önce sayfayı kaydedin."
+      },
+      "upload": {
+        "add-media": "Medya Ekle",
+        "label": "Dosyaları sürükleyip bırakın veya yüklemek için tıklayın",
+        "hint": "Resim ve video destekler (maks 100MB)"
+      },
+      "media": {
+        "edit": "Düzenle",
+        "delete": "Sil"
+      }
+    }
+  },
+  "errors": {
+    "SLUG_ALREADY_EXISTS": "Bu slug'a sahip bir medya sayfası zaten mevcut.",
+    "ERROR_UNKNOWN": "Bilinmeyen hata",
+    "ERROR_GENERAL": "Beklenmedik bir hata oluştu. Lütfen daha sonra tekrar deneyiniz."
+  },
+  "modals": {
+    "delete-page": {
+      "description": "<b>{title}</b> isimli medya sayfasını silmek istediğinizden emin misiniz? Bu sayfadaki tüm kategoriler ve medya öğeleri de silinecektir. Bu işlem geri alınamaz.",
+      "confirm": "Sil",
+      "cancel": "İptal"
+    },
+    "add-category": {
+      "title": "Kategori Ekle",
+      "fields": {
+        "title": "Kategori Başlığı",
+        "description": "Açıklama (opsiyonel)"
+      },
+      "save": "Ekle",
+      "cancel": "İptal"
+    },
+    "edit-category": {
+      "title": "Kategoriyi Düzenle",
+      "fields": {
+        "title": "Kategori Başlığı",
+        "description": "Açıklama (opsiyonel)"
+      },
+      "save": "Kaydet",
+      "cancel": "İptal"
+    },
+    "delete-category": {
+      "description": "<b>{title}</b> isimli kategoriyi silmek istediğinizden emin misiniz? Bu kategorideki tüm medya öğeleri de silinecektir.",
+      "confirm": "Sil",
+      "cancel": "İptal"
+    },
+    "edit-media": {
+      "title": "Medyayı Düzenle",
+      "fields": {
+        "title": "Başlık",
+        "description": "Açıklama"
+      },
+      "save": "Kaydet",
+      "cancel": "İptal"
+    },
+    "delete-media": {
+      "description": "<b>{title}</b> isimli medyayı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+      "confirm": "Sil",
+      "cancel": "İptal"
+    },
+    "upload-media": {
+      "title": "Medya Yükle",
+      "fields": {
+        "title": "Başlık (opsiyonel)",
+        "title-placeholder": "Medya için bir başlık girin...",
+        "description": "Açıklama (opsiyonel)",
+        "description-placeholder": "Bir açıklama girin..."
+      },
+      "drop-label": "Dosyaları sürükleyip bırakın veya göz atmak için tıklayın",
+      "drop-hint": "Resim ve video destekler (maks 100MB)",
+      "selected-count": "{count} dosya seçildi",
+      "clear": "Tümünü temizle",
+      "upload": "Yükle",
+      "cancel": "İptal"
+    },
+    "move-category": {
+      "title": "Kategoriyi Taşı",
+      "description": "<b>{title}</b> kategorisini taşımak için bir sayfa seçin:",
+      "select-page": "Bir sayfa seçin...",
+      "no-pages": "Başka sayfa bulunamadı.",
+      "move": "Taşı",
+      "cancel": "İptal"
+    }
+  },
+  "toasts": {
+    "page-added": "Medya sayfası başarıyla oluşturuldu.",
+    "page-updated": "Medya sayfası başarıyla güncellendi.",
+    "page-deleted": "Medya sayfası başarıyla silindi.",
+    "category-added": "Kategori başarıyla eklendi.",
+    "category-updated": "Kategori başarıyla güncellendi.",
+    "category-deleted": "Kategori başarıyla silindi.",
+    "media-uploaded": "Medya başarıyla yüklendi.",
+    "media-updated": "Medya başarıyla güncellendi.",
+    "media-deleted": "Medya başarıyla silindi.",
+    "category-moved": "Kategori başarıyla taşındı.",
+    "error-saving": "Kaydederken hata oluştu: {error}",
+    "error-deleting": "Silinirken hata oluştu: {error}",
+    "error-uploading": "Yüklenirken hata oluştu: {error}"
+  }
 }
