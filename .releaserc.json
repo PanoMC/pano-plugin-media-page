@@ -23,6 +23,25 @@
           }
         ]
       }
+    ],
+    [
+      "@PanoMC/semantic-release-pano",
+      {
+        "file": "build/libs/pano-plugin-media-page-${version}.jar",
+        "panoVersion": "1.0.0",
+        "configs": [
+          {
+            "resourceId": "pano-plugin-media-page",
+            "panoUrl": "https://api-dev.panomc.com",
+            "tokenVar": "PANO_TOKEN"
+          },
+          {
+            "resourceId": "pano-plugin-media-page",
+            "panoUrl": "https://api.panomc.com",
+            "tokenVar": "PANO_PROD_TOKEN"
+          }
+        ]
+      }
     ]
   ],
   "repositoryUrl": "https://github.com/PanoMC/pano-plugin-media-page.git"
