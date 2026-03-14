@@ -11,7 +11,7 @@
         aria-label={$_('media-pages.list.table.actions')}>
         <span class="fas fa-ellipsis-v"></span>
       </button>
-      <div class="dropdown-menu dropdown-menu-start animate__animated animate__fadeIn">
+      <div class="dropdown-menu dropdown-menu-start">
         <button type="button" class="dropdown-item" on:click={() => onEditClick(mediaPage.id)}>
           <span>
             <i class="fas fa-edit me-2"></i>

@@ -10,11 +10,9 @@
   </PageActions>
 
   <div class="card">
-    <CardHeader>
-      <div slot="left">
-        {$_('media-pages.list.total-count', { values: { count: data.pageCount || 0 } })}
-      </div>
-    </CardHeader>
+    <div class="card-header">
+      {$_('media-pages.list.total-count', { values: { count: data.pageCount || 0 } })}
+    </div>
 
     {#if !data.mediaPages || data.mediaPages.length === 0}
       <NoContent />
@@ -84,12 +82,7 @@
 
 <script>
   import { base, goto } from '@panomc/sdk/svelte';
-  import {
-    PageActions,
-    CardHeader,
-    NoContent,
-    Pagination,
-  } from '@panomc/sdk/components/panel';
+  import { PageActions, NoContent, Pagination } from '@panomc/sdk/components/panel';
 
   import { _ } from '../../main';
   import MediaPageRow from '../components/MediaPageRow.svelte';

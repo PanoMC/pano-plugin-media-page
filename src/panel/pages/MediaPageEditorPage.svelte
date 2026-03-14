@@ -1,209 +1,3 @@
-<article class="container vstack gap-3">
-  <PageActions>
-    <div slot="left">
-      <button type="button" class="btn btn-link text-decoration-none" on:click={goBack}>
-        <i class="fas fa-arrow-left me-2"></i>
-        {$_('media-pages.editor.back')}
-      </button>
-    </div>
-    <div slot="right">
-      <button type="button" class="btn btn-secondary" disabled={saving || !hasChanges || !isValid} on:click={save}>
-        {#if saving}
-          <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-        {/if}
-        <i class="fas fa-save me-1"></i>
-        {$_('media-pages.editor.save')}
-      </button>
-    </div>
-  </PageActions>
-
-  <!-- Page Settings -->
-  <div class="card">
-    <div class="card-body">
-      <div class="row g-3">
-        <div class="col-md-6">
-          <label for="title" class="form-label">{$_('media-pages.editor.fields.title')}</label>
-          <input type="text" class="form-control" id="title" bind:value={form.title} on:input={onTitleInput} />
-        </div>
-        <div class="col-md-6">
-          <label for="slug" class="form-label">{$_('media-pages.editor.fields.slug')}</label>
-          <input type="text" class="form-control" id="slug" bind:value={form.slug} />
-        </div>
-        <div class="col-12">
-          <label for="description" class="form-label">{$_('media-pages.editor.fields.description')}</label>
-          <textarea class="form-control" id="description" rows="3" bind:value={form.description}></textarea>
-        </div>
-        <div class="col-md-6">
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" id="active" bind:checked={form.active} />
-            <label class="form-check-label" for="active">{$_('media-pages.editor.fields.active')}</label>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" id="registerToThemeNav" bind:checked={form.registerToThemeNav} />
-            <label class="form-check-label" for="registerToThemeNav">{$_('media-pages.editor.fields.register-to-nav')}</label>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Categories section -->
-  <div class="d-flex align-items-center justify-content-between">
-    <h5 class="mb-0">{$_('media-pages.editor.categories.title')}</h5>
-    <button type="button" class="btn btn-sm btn-outline-secondary" on:click={showAddCategory}>
-      <i class="fas fa-plus me-1"></i>
-      {$_('media-pages.editor.categories.add')}
-    </button>
-  </div>
-
-  <!-- Edit mode: full category & media management -->
-  {#if categories.length === 0}
-    <div class="card">
-      <NoContent />
-    </div>
-  {:else}
-    {#each categories as cat, catIndex (cat.category.id)}
-      <div class="card {draggingCategoryIndex === catIndex ? 'dragging' : ''}" id="category-card-{cat.category.id}" animate:flip={{ duration: 250 }}
-        on:dragover|preventDefault={(e) => onCategoryDragOver(e, catIndex)}
-        on:dragleave={(e) => onCategoryDragLeave(e, catIndex)}
-        on:drop|preventDefault={(e) => onCategoryDrop(e, catIndex)}>
-        <div class="card-header d-flex align-items-center justify-content-between">
-          <div class="d-flex align-items-center gap-2">
-            <!-- Drag handle for category reorder -->
-            <div class="drag-handle d-flex flex-column gap-1"
-              draggable="true"
-              on:dragstart={(e) => onCategoryDragStart(e, catIndex, cat.category.id)}
-              on:dragend={onCategoryDragEnd}
-              role="button" tabindex="0"
-              on:keydown={(e) => { if (e.key === 'ArrowUp' && catIndex > 0) swapCategories(catIndex, catIndex - 1); if (e.key === 'ArrowDown' && catIndex < categories.length - 1) swapCategories(catIndex, catIndex + 1); }}
-              aria-label="Drag to reorder">
-              <i class="fas fa-grip-vertical text-muted"></i>
-            </div>
-            <i class="fas fa-layer-group text-muted"></i>
-            <strong>{cat.category.title}</strong>
-            {#if cat.category.description}
-              <small class="text-muted ms-2 d-none d-md-inline">— {cat.category.description}</small>
-            {/if}
-            {#if !cat.category.visible}
-              <span class="badge bg-secondary ms-1">{$_('media-pages.editor.categories.hidden')}</span>
-            {/if}
-          </div>
-          <div class="d-flex align-items-center gap-2">
-            <!-- Visibility toggle -->
-            <div class="form-check form-switch mb-0">
-              <input class="form-check-input" type="checkbox"
-                checked={cat.category.visible}
-                on:change={() => toggleCategoryVisibility(cat.category)}
-                id="visible-{cat.category.id}"
-                use:tooltip={[$_('media-pages.editor.categories.toggle-visibility'), { placement: 'bottom' }]}
-                aria-label={$_('media-pages.editor.categories.toggle-visibility')} />
-            </div>
-            {#if isEditing}
-              <!-- Add Media -->
-              <button type="button" class="btn btn-sm btn-outline-secondary" on:click={() => openUploadModal(cat.category.id)}
-                use:tooltip={[$_('media-pages.editor.upload.add-media'), { placement: 'bottom' }]}
-                aria-label={$_('media-pages.editor.upload.add-media')}>
-                <i class="fas fa-upload"></i>
-              </button>
-              <!-- Move to another page -->
-              <button type="button" class="btn btn-sm btn-outline-secondary" on:click={() => moveCategory(cat.category)}
-                use:tooltip={[$_('media-pages.editor.categories.move'), { placement: 'bottom' }]}
-                aria-label={$_('media-pages.editor.categories.move')}>
-                <i class="fas fa-arrow-right-arrow-left"></i>
-              </button>
-            {/if}
-            <!-- Edit -->
-            <button type="button" class="btn btn-sm btn-outline-secondary" on:click={() => editCategory(cat.category)}
-              use:tooltip={[$_('media-pages.list.table.actions-edit'), { placement: 'bottom' }]}
-              aria-label={$_('media-pages.list.table.actions-edit')}>
-              <i class="fas fa-edit"></i>
-            </button>
-            <!-- Delete -->
-            <button type="button" class="btn btn-sm btn-outline-danger" on:click={() => deleteCategory(cat.category)}
-              use:tooltip={[$_('media-pages.list.table.actions-delete'), { placement: 'bottom' }]}
-              aria-label={$_('media-pages.list.table.actions-delete')}>
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        </div>
-        <div class="card-body">
-          <!-- Media Items Grid -->
-          {#if !isEditing}
-            <div class="text-center text-muted py-4">
-              <i class="fas fa-save fa-2x mb-2 opacity-50"></i>
-              <p class="mb-0">
-                {$_('media-pages.editor.categories.save-first-hint') !== 'media-pages.editor.categories.save-first-hint' ? $_('media-pages.editor.categories.save-first-hint') : 'Medya yüklemek için önce sayfayı kaydedin.'}
-              </p>
-            </div>
-          {:else if cat.items && cat.items.length > 0}
-            <div class="media-grid">
-              {#each cat.items as item, itemIndex (item.id)}
-                <div class="media-card {draggingMedia && draggingMedia.categoryId === cat.category.id && draggingMedia.itemIndex === itemIndex ? 'dragging' : ''}" animate:flip={{ duration: 150 }}
-                  draggable="true"
-                  on:dragstart={(e) => onMediaDragStart(e, cat.category.id, itemIndex)}
-                  on:dragover|preventDefault={(e) => onMediaDragOver(e, cat.category.id, itemIndex)}
-                  on:dragleave={(e) => onMediaDragLeave(e, cat.category.id, itemIndex)}
-                  on:drop|preventDefault={(e) => onMediaDrop(e, cat.category.id, itemIndex)}
-                  on:dragend={onMediaDragEnd}
-                  role="button" tabindex="0"
-                  aria-label="Drag to reorder media"
-                  on:keydown={(e) => {}}>
-                  <div class="media-preview">
-                    {#if item.type === 'IMAGE'}
-                      <img src="/api/media/file/{item.thumbnailPath || item.filePath}" alt={item.title} loading="lazy" />
-                    {:else}
-                      <div class="video-preview">
-                        {#if item.thumbnailPath}
-                          <img src="/api/media/file/{item.thumbnailPath}" alt={item.title} loading="lazy" />
-                        {:else}
-                          <video src="/api/media/file/{item.filePath}#t=0.1" preload="metadata" muted></video>
-                        {/if}
-                        <div class="video-overlay">
-                          <i class="fas fa-play-circle fa-2x"></i>
-                        </div>
-                        <span class="badge bg-dark position-absolute bottom-0 end-0 m-1">
-                          <i class="fas fa-video me-1"></i>Video
-                        </span>
-                      </div>
-                    {/if}
-                  </div>
-                  <div class="media-info">
-                    <small class="text-truncate d-block" title={item.title}>{item.title}</small>
-                    <div class="media-actions">
-                      <button type="button" class="btn btn-sm btn-link p-0" on:click|stopPropagation={() => editMedia(item)}
-                        use:tooltip={[$_('media-pages.editor.media.edit'), { placement: 'bottom' }]}
-                        aria-label={$_('media-pages.editor.media.edit')}>
-                        <i class="fas fa-edit"></i>
-                      </button>
-                      <button type="button" class="btn btn-sm btn-link p-0 text-danger" on:click|stopPropagation={() => deleteMedia(item)}
-                        use:tooltip={[$_('media-pages.editor.media.delete'), { placement: 'bottom' }]}
-                        aria-label={$_('media-pages.editor.media.delete')}>
-                        <i class="fas fa-trash"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              {/each}
-            </div>
-          {:else}
-            <NoContent />
-          {/if}
-        </div>
-      </div>
-    {/each}
-  {/if}
-
-  <AddCategoryModal />
-  <EditCategoryModal />
-  <ConfirmDeleteCategoryModal />
-  <UploadMediaModal />
-  <EditMediaModal />
-  <ConfirmDeleteMediaModal />
-  <MoveCategoryModal />
-</article>
-
 <style>
   .media-grid {
     display: grid;
@@ -217,7 +11,9 @@
     border: 1px solid var(--bs-border-color);
     border-radius: 8px;
     overflow: hidden;
-    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    transition:
+      box-shadow 0.2s ease,
+      border-color 0.2s ease;
     cursor: grab;
   }
   .media-card.dragging {
@@ -253,7 +49,8 @@
     align-items: center;
     justify-content: center;
   }
-  .video-preview video, .video-preview img {
+  .video-preview video,
+  .video-preview img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -288,6 +85,286 @@
     cursor: grabbing;
   }
 </style>
+
+<article class="container vstack gap-3">
+  <PageActions>
+    <div slot="left">
+      <button type="button" class="btn btn-link text-decoration-none" on:click={goBack}>
+        <i class="fas fa-arrow-left me-2"></i>
+        {$_('media-pages.editor.back')}
+      </button>
+    </div>
+    <div slot="right">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        disabled={saving || !hasChanges || !isValid}
+        on:click={save}>
+        {#if saving}
+          <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+        {/if}
+        {$_('media-pages.editor.save')}
+      </button>
+    </div>
+  </PageActions>
+
+  <!-- Page Settings -->
+  <div class="card">
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label for="title" class="form-label">{$_('media-pages.editor.fields.title')}</label>
+          <input
+            type="text"
+            class="form-control"
+            id="title"
+            bind:value={form.title}
+            on:input={onTitleInput} />
+        </div>
+        <div class="col-md-6">
+          <label for="slug" class="form-label">{$_('media-pages.editor.fields.slug')}</label>
+          <input type="text" class="form-control" id="slug" bind:value={form.slug} />
+        </div>
+        <div class="col-12">
+          <label for="description" class="form-label"
+            >{$_('media-pages.editor.fields.description')}</label>
+          <textarea class="form-control" id="description" rows="3" bind:value={form.description}
+          ></textarea>
+        </div>
+        <div class="col-md-6">
+          <div class="form-check form-switch">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="active"
+              bind:checked={form.active} />
+            <label class="form-check-label" for="active"
+              >{$_('media-pages.editor.fields.active')}</label>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-check form-switch">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="registerToThemeNav"
+              bind:checked={form.registerToThemeNav} />
+            <label class="form-check-label" for="registerToThemeNav"
+              >{$_('media-pages.editor.fields.register-to-nav')}</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categories section -->
+  <div class="d-flex align-items-center justify-content-between">
+    <h5 class="mb-0">{$_('media-pages.editor.categories.title')}</h5>
+    <button type="button" class="btn btn-primary" on:click={showAddCategory}>
+      <i class="fas fa-plus me-1"></i>
+      {$_('media-pages.editor.categories.add')}
+    </button>
+  </div>
+
+  <!-- Edit mode: full category & media management -->
+  {#if categories.length === 0}
+    <div class="card">
+      <NoContent />
+    </div>
+  {:else}
+    {#each categories as cat, catIndex (cat.category.id)}
+      <div
+        class="card {draggingCategoryIndex === catIndex ? 'dragging' : ''}"
+        id="category-card-{cat.category.id}"
+        animate:flip={{ duration: 250 }}
+        on:dragover|preventDefault={(e) => onCategoryDragOver(e, catIndex)}
+        on:dragleave={(e) => onCategoryDragLeave(e, catIndex)}
+        on:drop|preventDefault={(e) => onCategoryDrop(e, catIndex)}>
+        <div class="card-header d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center gap-2">
+            <!-- Drag handle for category reorder -->
+            <div
+              class="drag-handle d-flex flex-column gap-1"
+              draggable="true"
+              on:dragstart={(e) => onCategoryDragStart(e, catIndex, cat.category.id)}
+              on:dragend={onCategoryDragEnd}
+              role="button"
+              tabindex="0"
+              on:keydown={(e) => {
+                if (e.key === 'ArrowUp' && catIndex > 0) swapCategories(catIndex, catIndex - 1);
+                if (e.key === 'ArrowDown' && catIndex < categories.length - 1)
+                  swapCategories(catIndex, catIndex + 1);
+              }}
+              aria-label="Drag to reorder">
+              <i class="fas fa-grip-vertical text-muted"></i>
+            </div>
+            <i class="fas fa-layer-group text-muted"></i>
+            <strong>{cat.category.title}</strong>
+            {#if cat.category.description}
+              <small class="text-muted ms-2 d-none d-md-inline">— {cat.category.description}</small>
+            {/if}
+            {#if !cat.category.visible}
+              <span class="badge bg-danger ms-1">{$_('media-pages.editor.categories.hidden')}</span>
+            {/if}
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <!-- Visibility toggle -->
+            <div class="form-check form-switch mb-0">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                checked={cat.category.visible}
+                on:change={() => toggleCategoryVisibility(cat.category)}
+                id="visible-{cat.category.id}"
+                use:tooltip={[
+                  $_('media-pages.editor.categories.toggle-visibility'),
+                  { placement: 'bottom' },
+                ]}
+                aria-label={$_('media-pages.editor.categories.toggle-visibility')} />
+            </div>
+            {#if isEditing}
+              <!-- Add Media -->
+              <button
+                type="button"
+                class="btn btn-sm btn-link text-decoration-none"
+                on:click={() => openUploadModal(cat.category.id)}
+                use:tooltip={[$_('media-pages.editor.upload.add-media'), { placement: 'bottom' }]}
+                aria-label={$_('media-pages.editor.upload.add-media')}>
+                <i class="fas fa-upload"></i>
+              </button>
+              <!-- Move to another page -->
+              <button
+                type="button"
+                class="btn btn-sm btn-link text-decoration-none"
+                on:click={() => moveCategory(cat.category)}
+                use:tooltip={[$_('media-pages.editor.categories.move'), { placement: 'bottom' }]}
+                aria-label={$_('media-pages.editor.categories.move')}>
+                <i class="fas fa-arrow-right-arrow-left"></i>
+              </button>
+            {/if}
+            <!-- Edit -->
+            <button
+              type="button"
+              class="btn btn-sm btn-link text-decoration-none"
+              on:click={() => editCategory(cat.category)}
+              use:tooltip={[$_('media-pages.list.table.actions-edit'), { placement: 'bottom' }]}
+              aria-label={$_('media-pages.list.table.actions-edit')}>
+              <i class="fas fa-edit"></i>
+            </button>
+            <!-- Delete -->
+            <button
+              type="button"
+              class="btn btn-sm btn-link text-danger text-decoration-none"
+              on:click={() => deleteCategory(cat.category)}
+              use:tooltip={[$_('media-pages.list.table.actions-delete'), { placement: 'bottom' }]}
+              aria-label={$_('media-pages.list.table.actions-delete')}>
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <!-- Media Items Grid -->
+          {#if !isEditing}
+            <div class="text-center text-muted py-4">
+              <i class="fas fa-save fa-2x mb-2 opacity-50"></i>
+              <p class="mb-0">
+                {$_('media-pages.editor.categories.save-first-hint') !==
+                'media-pages.editor.categories.save-first-hint'
+                  ? $_('media-pages.editor.categories.save-first-hint')
+                  : 'Medya yüklemek için önce sayfayı kaydedin.'}
+              </p>
+            </div>
+          {:else if cat.items && cat.items.length > 0}
+            <div class="media-grid">
+              {#each cat.items as item, itemIndex (item.id)}
+                <div
+                  class="media-card {draggingMedia &&
+                  draggingMedia.categoryId === cat.category.id &&
+                  draggingMedia.itemIndex === itemIndex
+                    ? 'dragging'
+                    : ''}"
+                  animate:flip={{ duration: 150 }}
+                  draggable="true"
+                  on:dragstart={(e) => onMediaDragStart(e, cat.category.id, itemIndex)}
+                  on:dragover|preventDefault={(e) => onMediaDragOver(e, cat.category.id, itemIndex)}
+                  on:dragleave={(e) => onMediaDragLeave(e, cat.category.id, itemIndex)}
+                  on:drop|preventDefault={(e) => onMediaDrop(e, cat.category.id, itemIndex)}
+                  on:dragend={onMediaDragEnd}
+                  role="button"
+                  tabindex="0"
+                  aria-label="Drag to reorder media"
+                  on:keydown={(e) => {}}>
+                  <div class="media-preview">
+                    {#if item.type === 'IMAGE'}
+                      <img
+                        src="/api/media/file/{item.thumbnailPath || item.filePath}"
+                        alt={item.title}
+                        loading="lazy" />
+                    {:else}
+                      <div class="video-preview">
+                        {#if item.thumbnailPath}
+                          <img
+                            src="/api/media/file/{item.thumbnailPath}"
+                            alt={item.title}
+                            loading="lazy" />
+                        {:else}
+                          <video
+                            src="/api/media/file/{item.filePath}#t=0.1"
+                            preload="metadata"
+                            muted></video>
+                        {/if}
+                        <div class="video-overlay">
+                          <i class="fas fa-play-circle fa-2x"></i>
+                        </div>
+                        <span class="badge bg-dark position-absolute bottom-0 end-0 m-1">
+                          <i class="fas fa-video me-1"></i>Video
+                        </span>
+                      </div>
+                    {/if}
+                  </div>
+                  <div class="media-info">
+                    <small class="text-truncate d-block" title={item.title}>{item.title}</small>
+                    <div class="media-actions">
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-link p-0"
+                        on:click|stopPropagation={() => editMedia(item)}
+                        use:tooltip={[$_('media-pages.editor.media.edit'), { placement: 'bottom' }]}
+                        aria-label={$_('media-pages.editor.media.edit')}>
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-link p-0 text-danger"
+                        on:click|stopPropagation={() => deleteMedia(item)}
+                        use:tooltip={[
+                          $_('media-pages.editor.media.delete'),
+                          { placement: 'bottom' },
+                        ]}
+                        aria-label={$_('media-pages.editor.media.delete')}>
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              {/each}
+            </div>
+          {:else}
+            <NoContent />
+          {/if}
+        </div>
+      </div>
+    {/each}
+  {/if}
+
+  <AddCategoryModal />
+  <EditCategoryModal />
+  <ConfirmDeleteCategoryModal />
+  <UploadMediaModal />
+  <EditMediaModal />
+  <ConfirmDeleteMediaModal />
+  <MoveCategoryModal />
+</article>
 
 <script context="module">
   import ApiUtil from '@panomc/sdk/utils/api';
@@ -398,14 +475,17 @@
 
   let initialFormStr = JSON.stringify(form);
   let initialCategoriesCount = data.categories ? data.categories.length : 0;
-  $: hasChanges = JSON.stringify(form) !== initialFormStr || (!isEditing && categories.length > initialCategoriesCount);
+  $: hasChanges =
+    JSON.stringify(form) !== initialFormStr ||
+    (!isEditing && categories.length > initialCategoriesCount);
   $: isValid = form.title.trim() !== '' && form.slug.trim() !== '';
 
   let oldTitle = form.title || '';
 
   function slugify(text) {
     if (!text) return '';
-    return text.toLowerCase()
+    return text
+      .toLowerCase()
       .replace(/[^a-z0-9\s-]/g, '')
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-')
@@ -447,10 +527,10 @@
       } else {
         const postBody = { ...form };
         if (categories.length > 0) {
-          postBody.categories = categories.map(c => ({
+          postBody.categories = categories.map((c) => ({
             title: c.category.title?.trim() || '',
             description: c.category.description?.trim() || '',
-            visible: c.category.visible !== false
+            visible: c.category.visible !== false,
           }));
         }
 
@@ -494,9 +574,7 @@
 
   setEditCategoryCallback((updatedCategory) => {
     categories = categories.map((c) =>
-      c.category.id === updatedCategory.id
-        ? { ...c, category: updatedCategory }
-        : c
+      c.category.id === updatedCategory.id ? { ...c, category: updatedCategory } : c,
     );
   });
 
@@ -518,7 +596,7 @@
       categories = categories.map((c) =>
         c.category.id === category.id
           ? { ...c, category: { ...c.category, visible: !c.category.visible } }
-          : c
+          : c,
       );
       return;
     }
@@ -532,7 +610,7 @@
         categories = categories.map((c) =>
           c.category.id === category.id
             ? { ...c, category: { ...c.category, visible: newVisible } }
-            : c
+            : c,
         );
         showToast(`plugins.${pluginId}.toasts.category-updated`);
       } else if (result?.error) {
@@ -548,13 +626,13 @@
   // Category drag & drop reorder
   function onCategoryDragStart(event, index, categoryId) {
     const dragIndex = index;
-    initialCategoryOrder = categories.map(c => c.category.id);
+    initialCategoryOrder = categories.map((c) => c.category.id);
     event.dataTransfer.effectAllowed = 'move';
     event.dataTransfer.setData('text/plain', 'category');
 
     const el = document.getElementById(`category-card-${categoryId}`);
     if (el) {
-       event.dataTransfer.setDragImage(el, event.clientX - el.getBoundingClientRect().left, 20);
+      event.dataTransfer.setDragImage(el, event.clientX - el.getBoundingClientRect().left, 20);
     }
 
     // Delay applying the dragging index to ensure browser captures full-opacity drag image
@@ -567,7 +645,7 @@
     if (draggingCategoryIndex !== null && draggingCategoryIndex !== index) {
       const rect = event.currentTarget.getBoundingClientRect();
       const midY = rect.top + rect.height / 2;
-      
+
       // Yalnızca hedefin yarısını (merkezini) geçtiğinde yer değiştir, böylece titreme olmaz
       if (draggingCategoryIndex < index && event.clientY < midY) return;
       if (draggingCategoryIndex > index && event.clientY > midY) return;
@@ -581,8 +659,7 @@
     }
   }
 
-  function onCategoryDragLeave(event, index) {
-  }
+  function onCategoryDragLeave(event, index) {}
 
   function onCategoryDrop(event, targetIndex) {
     // Drop işlevini boş bırakıyoruz çünkü dragend daha güvenilir (live-sort sırasında drop tetiklenmeyebilir)
@@ -590,9 +667,9 @@
 
   function onCategoryDragEnd() {
     draggingCategoryIndex = null;
-    const currentOrder = categories.map(c => c.category.id);
+    const currentOrder = categories.map((c) => c.category.id);
     const hasChanged = JSON.stringify(initialCategoryOrder) !== JSON.stringify(currentOrder);
-    
+
     if (hasChanged) {
       saveCategoryOrder();
     }
@@ -659,16 +736,16 @@
   function onMediaDragStart(event, categoryId, itemIndex) {
     const dragData = { categoryId, itemIndex };
     const target = event.currentTarget;
-    
+
     // Store initial order for this category
-    const cat = categories.find(c => c.category.id === categoryId);
+    const cat = categories.find((c) => c.category.id === categoryId);
     if (cat) {
-      initialMediaOrders[categoryId] = cat.items.map(i => i.id);
+      initialMediaOrders[categoryId] = cat.items.map((i) => i.id);
     }
-    
+
     event.dataTransfer.effectAllowed = 'move';
     event.dataTransfer.setData('text/plain', 'media');
-    
+
     if (target) {
       const rect = target.getBoundingClientRect();
       // Set drag image with mouse offset for better "in-hand" feel
@@ -684,14 +761,18 @@
   let lastMediaSwapTime = 0;
 
   function onMediaDragOver(event, categoryId, itemIndex) {
-    if (draggingMedia && draggingMedia.categoryId === categoryId && draggingMedia.itemIndex !== itemIndex) {
+    if (
+      draggingMedia &&
+      draggingMedia.categoryId === categoryId &&
+      draggingMedia.itemIndex !== itemIndex
+    ) {
       const now = Date.now();
       if (now - lastMediaSwapTime < 50) return; // Prevent rapid-fire swaps during animations
 
       const rect = event.currentTarget.getBoundingClientRect();
       const relX = (event.clientX - rect.left) / rect.width;
       const relY = (event.clientY - rect.top) / rect.height;
-      
+
       const fromIndex = draggingMedia.itemIndex;
       const toIndex = itemIndex;
 
@@ -716,7 +797,7 @@
 
       // Trigger Svelte reactivity
       categories = categories.map((c) =>
-        c.category.id === categoryId ? { ...c, items: newItems } : c
+        c.category.id === categoryId ? { ...c, items: newItems } : c,
       );
 
       // Update dragging state and timing
@@ -726,8 +807,7 @@
     }
   }
 
-  function onMediaDragLeave(event, categoryId, itemIndex) {
-  }
+  function onMediaDragLeave(event, categoryId, itemIndex) {}
 
   function onMediaDrop(event, categoryId, targetIndex) {
     // Drop işlevini boş bırakıyoruz çünkü dragend daha güvenilir
@@ -738,8 +818,9 @@
     modifiedMediaCategories.forEach((catId) => {
       const cat = categories.find((c) => c.category.id === catId);
       if (cat) {
-        const currentOrder = cat.items.map(i => i.id);
-        const hasChanged = JSON.stringify(initialMediaOrders[catId]) !== JSON.stringify(currentOrder);
+        const currentOrder = cat.items.map((i) => i.id);
+        const hasChanged =
+          JSON.stringify(initialMediaOrders[catId]) !== JSON.stringify(currentOrder);
         if (hasChanged) {
           saveMediaOrder(catId, cat.items);
         }

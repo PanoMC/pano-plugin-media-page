@@ -16,16 +16,27 @@
               style="max-height: 200px;" />
           </div>
         {/if}
-        <div class="mb-3">
-          <label for="media-title" class="form-label">{$_('modals.edit-media.fields.title')}</label>
-          <input type="text" class="form-control" id="media-title" bind:value={title} />
+        <div class="form-floating mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="media-title"
+            bind:value={title}
+            placeholder={$_('modals.edit-media.fields.title')} />
+          <label for="media-title">{$_('modals.edit-media.fields.title')}</label>
         </div>
-        <div class="mb-3">
-          <label for="media-description" class="form-label">{$_('modals.edit-media.fields.description')}</label>
-          <textarea class="form-control" id="media-description" rows="3" bind:value={description}></textarea>
+        <div class="form-floating mb-3">
+          <textarea
+            class="form-control"
+            id="media-description"
+            style="height: 100px"
+            bind:value={description}
+            placeholder={$_('modals.edit-media.fields.description')}></textarea>
+          <label for="media-description">{$_('modals.edit-media.fields.description')}</label>
         </div>
-        <div class="small text-muted">
-          <i class="fas fa-file me-1"></i> {$item.originalFileName}
+        <div class="small">
+          <i class="fas fa-file me-1"></i>
+          {$item.originalFileName}
           <span class="ms-2">({formatFileSize($item.fileSize)})</span>
           {#if $item.width && $item.height}
             <span class="ms-2">{$item.width} × {$item.height}</span>
@@ -33,10 +44,11 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-link" type="button" class:disabled={loading} on:click={hide}>
-          {$_('modals.edit-media.cancel')}
-        </button>
-        <button class="btn btn-secondary" type="button" class:disabled={loading || !hasChanges} on:click={onSave}>
+        <button
+          class="btn btn-secondary w-100"
+          type="button"
+          class:disabled={loading || !hasChanges}
+          on:click={onSave}>
           {#if loading}
             <span class="spinner-border spinner-border-sm me-2" role="status"></span>
           {/if}

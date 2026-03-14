@@ -1,3 +1,9 @@
+<style>
+  .text-first-capitalize::first-letter {
+    text-transform: uppercase;
+  }
+</style>
+
 <!-- Move Category Modal -->
 <div aria-hidden="true" class="modal fade" bind:this={$modalElement} role="dialog" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered" role="dialog">
@@ -6,8 +12,12 @@
         <h5 class="modal-title">{$_('modals.move-category.title')}</h5>
         <button type="button" class="btn-close" on:click={hide} aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        <p>{@html $_('modals.move-category.description', { values: { title: $category.title } })}</p>
+      <div class="modal-body text-first-capitalize">
+        <p>
+          {@html $_('modals.move-category.description', {
+            values: { title: `<span class="badge text-bg-gray">${$category.title}</span>` },
+          })}
+        </p>
         {#if loading}
           <div class="text-center py-3">
             <span class="spinner-border spinner-border-sm" role="status"></span>
@@ -26,10 +36,9 @@
         {/if}
       </div>
       <div class="modal-footer">
-        <button class="btn btn-link" type="button" class:disabled={moving} on:click={hide}>
-          {$_('modals.move-category.cancel')}
-        </button>
-        <button class="btn btn-secondary" type="button"
+        <button
+          class="btn btn-secondary w-100"
+          type="button"
           class:disabled={moving || !selectedPageId}
           on:click={onMove}>
           {#if moving}
@@ -117,7 +126,9 @@
         showToast(`plugins.${pluginId}.toasts.category-moved`);
         hide();
       } else {
-        showToast(`plugins.${pluginId}.toasts.error-saving`, { error: result?.error || 'Unknown error' });
+        showToast(`plugins.${pluginId}.toasts.error-saving`, {
+          error: result?.error || 'Unknown error',
+        });
       }
     } catch (e) {
       console.error(e);

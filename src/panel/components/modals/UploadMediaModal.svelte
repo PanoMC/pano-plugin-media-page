@@ -1,119 +1,3 @@
-<!-- Upload Media Modal -->
-<div aria-hidden="true" class="modal fade" bind:this={$modalElement} role="dialog" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered modal-lg" role="dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">{$_('modals.upload-media.title')}</h5>
-        <button type="button" class="btn-close" on:click={hide} aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <!-- Optional Title & Description -->
-        <div class="row g-3 mb-3">
-          <div class="col-12">
-            <label for="upload-title" class="form-label">{$_('modals.upload-media.fields.title')}</label>
-            <input type="text" class="form-control" id="upload-title" bind:value={title}
-              placeholder={$_('modals.upload-media.fields.title-placeholder')} />
-          </div>
-          <div class="col-12">
-            <label for="upload-description" class="form-label">{$_('modals.upload-media.fields.description')}</label>
-            <textarea class="form-control" id="upload-description" rows="2" bind:value={description}
-              placeholder={$_('modals.upload-media.fields.description-placeholder')}></textarea>
-          </div>
-        </div>
-
-        <!-- Drag & Drop Area -->
-        <div
-          class="upload-area"
-          class:drag-over={isDragOver}
-          on:dragover|preventDefault={() => { isDragOver = true; }}
-          on:dragleave={() => { isDragOver = false; }}
-          on:drop|preventDefault={onDrop}
-          role="button"
-          tabindex="0">
-          <input
-            type="file"
-            multiple
-            accept="image/*,video/*"
-            id="upload-file-input"
-            style="display: none"
-            on:change={onFileSelect} />
-          <label for="upload-file-input" class="upload-label">
-            <i class="fas fa-cloud-upload-alt fa-3x mb-2"></i>
-            <span>{$_('modals.upload-media.drop-label')}</span>
-            <small class="text-muted">{$_('modals.upload-media.drop-hint')}</small>
-          </label>
-        </div>
-
-        <!-- Selected Files Preview -->
-        {#if selectedFiles.length > 0}
-          <div class="mt-3">
-            <div class="d-flex align-items-center justify-content-between mb-2">
-              <small class="text-muted">
-                {$_('modals.upload-media.selected-count', { values: { count: selectedFiles.length } })}
-              </small>
-              <button type="button" class="btn btn-sm btn-link text-danger p-0" on:click={clearFiles}>
-                {$_('modals.upload-media.clear')}
-              </button>
-            </div>
-            <div class="file-list">
-              {#each selectedFiles as file, i (i)}
-                <div class="file-item">
-                  <div class="d-flex align-items-center gap-2 overflow-hidden">
-                    {#if file.type.startsWith('image/')}
-                      <img src={getFilePreviewUrl(file)} alt={file.name} class="file-thumb" />
-                    {:else if file.type.startsWith('video/')}
-                      <div class="file-thumb video-preview-container">
-                        <video src={getFilePreviewUrl(file)} preload="metadata" muted></video>
-                        <div class="video-preview-overlay">
-                          <i class="fas fa-play"></i>
-                        </div>
-                      </div>
-                    {:else}
-                      <div class="file-thumb-icon">
-                        <i class="fas fa-file"></i>
-                      </div>
-                    {/if}
-                    <small class="text-truncate">{file.name}</small>
-                  </div>
-                  <div class="d-flex align-items-center gap-2">
-                    <small class="text-muted flex-shrink-0">{formatFileSize(file.size)}</small>
-                    <button type="button" class="btn btn-sm btn-link p-0 text-danger" on:click={() => removeFile(i)} aria-label="Remove">
-                      <i class="fas fa-times"></i>
-                    </button>
-                  </div>
-                </div>
-              {/each}
-            </div>
-          </div>
-        {/if}
-
-        <!-- Upload Progress -->
-        {#if uploading}
-          <div class="progress mt-3">
-            <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: {uploadProgress}%">
-              {Math.round(uploadProgress)}%
-            </div>
-          </div>
-        {/if}
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-link" type="button" class:disabled={uploading} on:click={hide}>
-          {$_('modals.upload-media.cancel')}
-        </button>
-        <button class="btn btn-secondary" type="button"
-          class:disabled={uploading || selectedFiles.length === 0}
-          on:click={onUpload}>
-          {#if uploading}
-            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-          {/if}
-          <i class="fas fa-upload me-1"></i>
-          {$_('modals.upload-media.upload')}
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <style>
   .upload-area {
     border: 2px dashed var(--bs-border-color);
@@ -193,6 +77,139 @@
     color: #fff;
   }
 </style>
+
+<!-- Upload Media Modal -->
+<div aria-hidden="true" class="modal fade" bind:this={$modalElement} role="dialog" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{$_('modals.upload-media.title')}</h5>
+        <button type="button" class="btn-close" on:click={hide} aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Optional Title & Description -->
+        <div class="row g-3 mb-3">
+          <div class="col-12">
+            <label for="upload-title" class="form-label"
+              >{$_('modals.upload-media.fields.title')}</label>
+            <input
+              type="text"
+              class="form-control"
+              id="upload-title"
+              bind:value={title}
+              placeholder={$_('modals.upload-media.fields.title-placeholder')} />
+          </div>
+          <div class="col-12">
+            <label for="upload-description" class="form-label"
+              >{$_('modals.upload-media.fields.description')}</label>
+            <textarea
+              class="form-control"
+              id="upload-description"
+              rows="2"
+              bind:value={description}
+              placeholder={$_('modals.upload-media.fields.description-placeholder')}></textarea>
+          </div>
+        </div>
+
+        <!-- Drag & Drop Area -->
+        <div
+          class="upload-area"
+          class:drag-over={isDragOver}
+          on:dragover|preventDefault={() => {
+            isDragOver = true;
+          }}
+          on:dragleave={() => {
+            isDragOver = false;
+          }}
+          on:drop|preventDefault={onDrop}
+          role="button"
+          tabindex="0">
+          <input
+            type="file"
+            multiple
+            accept="image/*,video/*"
+            id="upload-file-input"
+            style="display: none"
+            on:change={onFileSelect} />
+          <label for="upload-file-input" class="upload-label">
+            <i class="fas fa-cloud-upload-alt fa-3x mb-2"></i>
+            <span>{$_('modals.upload-media.drop-label')}</span>
+            <small class="">{$_('modals.upload-media.drop-hint')}</small>
+          </label>
+        </div>
+
+        <!-- Selected Files Preview -->
+        {#if selectedFiles.length > 0}
+          <div class="mt-3">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <small class="">
+                {$_('modals.upload-media.selected-count', {
+                  values: { count: selectedFiles.length },
+                })}
+              </small>
+              <button
+                type="button"
+                class="btn btn-link link-danger"
+                on:click={clearFiles}>
+                {$_('modals.upload-media.clear')}
+              </button>
+            </div>
+            <div class="file-list">
+              {#each selectedFiles as file, i (i)}
+                <div class="file-item">
+                  <div class="d-flex align-items-center gap-2 overflow-hidden">
+                    {#if file.type.startsWith('image/')}
+                      <img src={getFilePreviewUrl(file)} alt={file.name} class="file-thumb" />
+                    {:else if file.type.startsWith('video/')}
+                      <div class="file-thumb video-preview-container">
+                        <video src={getFilePreviewUrl(file)} preload="metadata" muted></video>
+                        <div class="video-preview-overlay">
+                          <i class="fas fa-play"></i>
+                        </div>
+                      </div>
+                    {:else}
+                      <div class="file-thumb-icon">
+                        <i class="fas fa-file"></i>
+                      </div>
+                    {/if}
+                    <small class="text-truncate">{file.name}</small>
+                  </div>
+                  <div class="d-flex align-items-center gap-2">
+                    <small class=" flex-shrink-0">{formatFileSize(file.size)}</small>
+                    <button type="button" class="btn-close" on:click={() => removeFile(i)}></button>
+                  </div>
+                </div>
+              {/each}
+            </div>
+          </div>
+        {/if}
+
+        <!-- Upload Progress -->
+        {#if uploading}
+          <div class="progress mt-3">
+            <div
+              class="progress-bar progress-bar-striped progress-bar-animated"
+              style="width: {uploadProgress}%">
+              {Math.round(uploadProgress)}%
+            </div>
+          </div>
+        {/if}
+      </div>
+      <div class="modal-footer">
+        <button
+          class="btn btn-secondary w-100"
+          type="button"
+          class:disabled={uploading || selectedFiles.length === 0}
+          on:click={onUpload}>
+          {#if uploading}
+            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+          {/if}
+          {$_('modals.upload-media.upload')}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script context="module">
   import { get, writable } from 'svelte/store';

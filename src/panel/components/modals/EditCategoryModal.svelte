@@ -11,16 +11,11 @@
           <label for="edit-cat-title" class="form-label">{$_('modals.edit-category.fields.title')}</label>
           <input type="text" class="form-control" id="edit-cat-title" bind:value={title} />
         </div>
-        <div class="mb-3">
-          <label for="edit-cat-description" class="form-label">{$_('modals.edit-category.fields.description')}</label>
-          <textarea class="form-control" id="edit-cat-description" rows="2" bind:value={description}></textarea>
-        </div>
+        <label for="edit-cat-description" class="form-label">{$_('modals.edit-category.fields.description')}</label>
+        <textarea class="form-control" id="edit-cat-description" rows="2" bind:value={description}></textarea>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-link" type="button" class:disabled={loading} on:click={hide}>
-          {$_('modals.edit-category.cancel')}
-        </button>
-        <button class="btn btn-secondary" type="button" class:disabled={loading || !title.trim() || !hasChanges} on:click={onSave}>
+        <button class="btn btn-secondary w-100" type="button" class:disabled={loading || !title.trim() || !hasChanges} on:click={onSave}>
           {#if loading}
             <span class="spinner-border spinner-border-sm me-2" role="status"></span>
           {/if}
