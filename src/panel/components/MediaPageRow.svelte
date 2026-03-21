@@ -18,7 +18,7 @@
             {$_('media-pages.list.table.actions-edit')}
           </span>
         </button>
-        <button type="button" class="dropdown-item" on:click={() => onDeleteClick(mediaPage.id)}>
+        <button type="button" class="dropdown-item link-danger" on:click={() => onDeleteClick(mediaPage.id)}>
           <i class="fas fa-trash me-2"></i>
           <span> {$_('media-pages.list.table.actions-delete')} </span>
         </button>

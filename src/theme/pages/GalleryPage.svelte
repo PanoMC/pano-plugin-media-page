@@ -1,76 +1,66 @@
-<svelte:component this={PageTitle} title={data.mediaPage.title} />
+{#if data.categories && data.categories.length > 0}
+  {#each data.categories as cat (cat.category.id)}
+    <section class="category-section">
+      <div class="category-header">
+        <h2 class="h4">{cat.category.title}</h2>
+        {#if cat.category.description}
+          <p class="opacity-75 small mb-0">{cat.category.description}</p>
+        {/if}
+        <hr class="mt-2 mb-4 opacity-10" />
+      </div>
 
-<article class="container pb-5">
-  <header class="gallery-header mb-5">
-    {#if data.mediaPage.description}
-      <p class="lead text-muted">{data.mediaPage.description}</p>
-    {/if}
-  </header>
-
-  {#if data.categories && data.categories.length > 0}
-    {#each data.categories as cat (cat.category.id)}
-      <section class="mb-5 category-section">
-        <div class="category-header mb-4">
-          <h2 class="h3 mb-1 fw-bold">{cat.category.title}</h2>
-          {#if cat.category.description}
-            <p class="text-muted small mb-0">{cat.category.description}</p>
-          {/if}
-          <div class="header-line mt-2"></div>
-        </div>
-
-        {#if cat.items && cat.items.length > 0}
-          <div class="gallery-grid">
-            {#each cat.items as item (item.id)}
-              <div class="gallery-item" on:click={() => openLightbox(item)} on:keydown={(e) => { if (e.key === 'Enter') openLightbox(item); }} role="button" tabindex="0">
-                <div class="item-inner">
-                  {#if item.type === 'IMAGE'}
-                    <img
-                      src="/api/media/file/{item.thumbnailPath || item.filePath}"
-                      alt={item.title}
-                      loading="lazy"
-                      class="gallery-img" />
-                  {:else}
-                    <div class="gallery-video-thumb">
-                      {#if item.thumbnailPath}
-                        <img src="/api/media/file/{item.thumbnailPath}" alt={item.title} loading="lazy" class="gallery-img" />
-                      {:else}
-                        <video src="/api/media/file/{item.filePath}#t=0.1" preload="metadata" muted></video>
-                      {/if}
-                      <div class="play-icon">
-                        <i class="fas fa-play"></i>
-                      </div>
-                      <span class="badge bg-blur position-absolute bottom-0 end-0 m-2">
-                        <i class="fas fa-video me-1"></i>Video
-                      </span>
+      {#if cat.items && cat.items.length > 0}
+        <div class="gallery-grid">
+          {#each cat.items as item (item.id)}
+            <div class="gallery-item" on:click={() => openLightbox(item)} on:keydown={(e) => { if (e.key === 'Enter') openLightbox(item); }} role="button" tabindex="0">
+              <div class="item-inner">
+                {#if item.type === 'IMAGE'}
+                  <img
+                    src="/api/media/file/{item.thumbnailPath || item.filePath}"
+                    alt={item.title}
+                    loading="lazy"
+                    class="gallery-img" />
+                {:else}
+                  <div class="gallery-video-thumb">
+                    {#if item.thumbnailPath}
+                      <img src="/api/media/file/{item.thumbnailPath}" alt={item.title} loading="lazy" class="gallery-img" />
+                    {:else}
+                      <video src="/api/media/file/{item.filePath}#t=0.1" preload="metadata" muted></video>
+                    {/if}
+                    <div class="play-icon">
+                      <i class="fas fa-play"></i>
                     </div>
-                  {/if}
-                  <div class="gallery-overlay">
-                    <div class="overlay-content">
-                      {#if item.title}
-                        <span class="gallery-title d-block">{item.title}</span>
-                      {/if}
-                      <div class="zoom-icon mt-2">
-                        <i class="fas fa-search-plus"></i>
-                      </div>
+                    <span class="badge bg-blur position-absolute bottom-0 end-0 m-2">
+                      <i class="fas fa-video me-1"></i>Video
+                    </span>
+                  </div>
+                {/if}
+                <div class="gallery-overlay">
+                  <div class="overlay-content">
+                    {#if item.title}
+                      <span class="gallery-title d-block">{item.title}</span>
+                    {/if}
+                    <div class="zoom-icon mt-2">
+                      <i class="fas fa-search-plus"></i>
                     </div>
                   </div>
                 </div>
               </div>
-            {/each}
-          </div>
-        {:else}
-          <div class="py-4 border rounded-3 text-center bg-light bg-opacity-10 text-muted">
-            <NoContent />
-          </div>
-        {/if}
-      </section>
-    {/each}
-  {:else}
-    <div class="py-5">
-      <NoContent />
-    </div>
-  {/if}
-</article>
+            </div>
+          {/each}
+        </div>
+      {:else}
+        <div class="py-4 border rounded-3 text-center bg-light bg-opacity-10 text-muted">
+          <NoContent />
+        </div>
+      {/if}
+    </section>
+  {/each}
+{:else}
+  <div class="py-5">
+    <NoContent />
+  </div>
+{/if}
 
 <!-- Lightbox -->
 {#if lightboxItem}
@@ -121,12 +111,6 @@
 <svelte:window on:keydown={handleKeyDown} />
 
 <style>
-  .header-line {
-    width: 40px;
-    height: 3px;
-    background: var(--bs-primary, #0d6efd);
-    border-radius: 2px;
-  }
 
   .gallery-grid {
     display: grid;
@@ -386,7 +370,7 @@
     }
 
     const data = res.data || res;
-    pageTitle.set(data.mediaPage.title);
+    pageTitle.set({ title: data.mediaPage.title, subtitle: data.mediaPage.description });
 
     return {
       data: {
@@ -398,7 +382,7 @@
 </script>
 
 <script>
-  import { PageTitle, NoContent } from '@panomc/sdk/components/theme';
+  import { NoContent } from '@panomc/sdk/components/theme';
   import { fade } from 'svelte/transition';
 
   export let data;
