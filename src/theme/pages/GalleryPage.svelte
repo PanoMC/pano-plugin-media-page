@@ -350,12 +350,12 @@
 </style>
 
 <script context="module">
-  import ApiUtil from '@panomc/sdk/utils/api';
-  import { error } from '@panomc/sdk/svelte';
+    import ApiUtil from '@panomc/sdk/utils/api';
+    import {error} from '@panomc/sdk/svelte';
 
-  export async function load(event) {
+    export async function load(event) {
     const { parent, url } = event;
-    const { pageTitle } = await parent();
+    await parent();
 
     const pathParts = url.pathname.split('/');
     const slug = pathParts[pathParts.length - 1];
@@ -370,13 +370,13 @@
     }
 
     const data = res.data || res;
-    pageTitle.set({ title: data.mediaPage.title, subtitle: data.mediaPage.description });
 
     return {
       data: {
         mediaPage: data.mediaPage,
         categories: data.categories || [],
       },
+      pageTitle: { title: data.mediaPage.title, subtitle: data.mediaPage.description },
     };
   }
 </script>
