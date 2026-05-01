@@ -5,6 +5,7 @@ import com.panomc.platform.auth.AuthProvider
 import com.panomc.platform.db.DatabaseManager
 import com.panomc.platform.error.BadRequest
 import com.panomc.platform.model.*
+import com.panomc.plugins.license.LicenseGuard
 import com.panomc.plugins.mediapage.MediaPagePlugin
 import com.panomc.plugins.mediapage.db.dao.MediaCategoryDao
 import com.panomc.plugins.mediapage.db.dao.MediaPageDao
@@ -62,6 +63,9 @@ class PanelAddMediaPageAPI(
             .build()
 
     override suspend fun handle(context: RoutingContext): Result {
+        // Anti-tamper: re-assert license at a critical write path.
+        LicenseGuard.assert(plugin)
+
         authProvider.requirePermission(ManageMediaPagePermission(), context)
 
         val parameters = getParameters(context)
