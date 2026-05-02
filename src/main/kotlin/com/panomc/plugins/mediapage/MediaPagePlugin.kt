@@ -41,6 +41,10 @@ class MediaPagePlugin : PanoPlugin() {
         startPlugin()
     }
 
+    override suspend fun verifyLicense() {
+        licenseClient.requireValidLicense()
+    }
+
     suspend fun startPlugin() {
         if (isInitialized) return
         isInitialized = true
