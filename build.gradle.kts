@@ -353,5 +353,3 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
         jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
     }
 }
-
-apply(from = layout.projectDirectory.file("gradle/proguard-premium.gradle"))
