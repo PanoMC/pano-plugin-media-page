@@ -33,12 +33,14 @@
           {
             "resourceId": "pano-plugin-media-page",
             "panoUrl": "https://api-dev.panomc.com",
-            "tokenVar": "PANO_TOKEN"
+            "tokenVar": "PANO_TOKEN",
+            "branches": ["dev"]
           },
           {
             "resourceId": "pano-plugin-media-page",
             "panoUrl": "https://api.panomc.com",
-            "tokenVar": "PANO_PROD_TOKEN"
+            "tokenVar": "PANO_PROD_TOKEN",
+            "branches": ["main"]
           }
         ]
       }
