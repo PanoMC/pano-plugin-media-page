@@ -47,12 +47,13 @@ class MediaPagePlugin : PanoPlugin() {
 
     suspend fun startPlugin() {
         if (isInitialized) return
-        isInitialized = true
 
         if (!setupManager.isSetupDone()) {
             logger.info("Setup is not finished, waiting for setup completion...")
             return
         }
+
+        isInitialized = true
 
         pluginDatabaseManager.initialize(this)
 
