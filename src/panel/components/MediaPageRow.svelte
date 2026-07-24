@@ -33,7 +33,6 @@
       type="button"
       on:click={() => onEditClick(mediaPage.id)}
       use:tooltip={[$_('media-pages.list.table.actions-edit')]}
-      title={mediaPage.title}
       aria-label={mediaPage.title}
       class="btn btn-link p-0 text-start text-decoration-none w-100 text-truncate focus-ring">
       {mediaPage.title}
