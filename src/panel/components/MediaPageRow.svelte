@@ -7,7 +7,7 @@
         aria-expanded="false"
         aria-haspopup="true"
         data-bs-toggle="dropdown"
-        use:tooltip={[$_('media-pages.list.table.actions')]}
+        title={$_('media-pages.list.table.actions')}
         aria-label={$_('media-pages.list.table.actions')}>
         <span class="fas fa-ellipsis-v"></span>
       </button>
@@ -32,7 +32,7 @@
     <button
       type="button"
       on:click={() => onEditClick(mediaPage.id)}
-      use:tooltip={[$_('media-pages.list.table.actions-edit')]}
+      title={$_('media-pages.list.table.actions-edit')}
       aria-label={mediaPage.title}
       class="btn btn-link p-0 text-start text-decoration-none w-100 text-truncate focus-ring">
       {mediaPage.title}
@@ -54,7 +54,6 @@
 
 <script>
   import { _ } from '../../main';
-  import tooltip from '@panomc/sdk/utils/tooltip';
 
   export let mediaPage;
   export let onEditClick;

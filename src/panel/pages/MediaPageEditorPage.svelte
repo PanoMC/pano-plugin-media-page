@@ -216,10 +216,7 @@
                 checked={cat.category.visible}
                 on:change={() => toggleCategoryVisibility(cat.category)}
                 id="visible-{cat.category.id}"
-                use:tooltip={[
-                  $_('media-pages.editor.categories.toggle-visibility'),
-                  { placement: 'bottom' },
-                ]}
+                title={$_('media-pages.editor.categories.toggle-visibility')}
                 aria-label={$_('media-pages.editor.categories.toggle-visibility')} />
             </div>
             {#if isEditing}
@@ -228,7 +225,7 @@
                 type="button"
                 class="btn btn-sm btn-link text-decoration-none"
                 on:click={() => openUploadModal(cat.category.id)}
-                use:tooltip={[$_('media-pages.editor.upload.add-media'), { placement: 'bottom' }]}
+                title={$_('media-pages.editor.upload.add-media')}
                 aria-label={$_('media-pages.editor.upload.add-media')}>
                 <i class="fas fa-upload"></i>
               </button>
@@ -237,7 +234,7 @@
                 type="button"
                 class="btn btn-sm btn-link text-decoration-none"
                 on:click={() => moveCategory(cat.category)}
-                use:tooltip={[$_('media-pages.editor.categories.move'), { placement: 'bottom' }]}
+                title={$_('media-pages.editor.categories.move')}
                 aria-label={$_('media-pages.editor.categories.move')}>
                 <i class="fas fa-arrow-right-arrow-left"></i>
               </button>
@@ -247,7 +244,7 @@
               type="button"
               class="btn btn-sm btn-link text-decoration-none"
               on:click={() => editCategory(cat.category)}
-              use:tooltip={[$_('media-pages.list.table.actions-edit'), { placement: 'bottom' }]}
+              title={$_('media-pages.list.table.actions-edit')}
               aria-label={$_('media-pages.list.table.actions-edit')}>
               <i class="fas fa-edit"></i>
             </button>
@@ -256,7 +253,7 @@
               type="button"
               class="btn btn-sm btn-link text-danger text-decoration-none"
               on:click={() => deleteCategory(cat.category)}
-              use:tooltip={[$_('media-pages.list.table.actions-delete'), { placement: 'bottom' }]}
+              title={$_('media-pages.list.table.actions-delete')}
               aria-label={$_('media-pages.list.table.actions-delete')}>
               <i class="fas fa-trash"></i>
             </button>
@@ -329,7 +326,7 @@
                         type="button"
                         class="btn btn-sm btn-link p-0"
                         on:click|stopPropagation={() => editMedia(item)}
-                        use:tooltip={[$_('media-pages.editor.media.edit'), { placement: 'bottom' }]}
+                        title={$_('media-pages.editor.media.edit')}
                         aria-label={$_('media-pages.editor.media.edit')}>
                         <i class="fas fa-edit"></i>
                       </button>
@@ -337,10 +334,7 @@
                         type="button"
                         class="btn btn-sm btn-link p-0 text-danger"
                         on:click|stopPropagation={() => deleteMedia(item)}
-                        use:tooltip={[
-                          $_('media-pages.editor.media.delete'),
-                          { placement: 'bottom' },
-                        ]}
+                        title={$_('media-pages.editor.media.delete')}
                         aria-label={$_('media-pages.editor.media.delete')}>
                         <i class="fas fa-trash"></i>
                       </button>
@@ -415,7 +409,6 @@
   import { base, goto } from '@panomc/sdk/svelte';
   import { PageActions, NoContent } from '@panomc/sdk/components/panel';
   import { showToast } from '@panomc/sdk/toasts';
-  import tooltip from '@panomc/sdk/utils/tooltip';
   import { _ } from '../../main';
 
   import AddCategoryModal, {
