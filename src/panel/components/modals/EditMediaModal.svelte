@@ -87,8 +87,7 @@
 </script>
 
 <script>
-  import { showToast } from '@panomc/sdk/toasts';
-  import { _, pluginId } from '../../../main';
+  import { _, pluginId, showSuccessToast, showErrorToast } from '../../../main';
 
   let loading = false;
   let title = '';
@@ -118,15 +117,15 @@
       });
 
       if (result.error) {
-        showToast(`plugins.${pluginId}.toasts.error-saving`, { error: result.error });
+        showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: result.error });
       } else {
         callback({ ...$item, title, description });
-        showToast(`plugins.${pluginId}.toasts.media-updated`);
+        showSuccessToast(`plugins.${pluginId}.toasts.media-updated`);
         hide();
       }
     } catch (e) {
       console.error(e);
-      showToast(`plugins.${pluginId}.toasts.error-saving`, { error: 'An error occurred' });
+      showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: 'An error occurred' });
     } finally {
       loading = false;
     }

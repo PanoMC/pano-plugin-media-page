@@ -408,8 +408,7 @@
   import { flip } from 'svelte/animate';
   import { base, goto } from '@panomc/sdk/svelte';
   import { PageActions, NoContent } from '@panomc/sdk/components/panel';
-  import { showToast } from '@panomc/sdk/toasts';
-  import { _ } from '../../main';
+  import { _, showSuccessToast, showErrorToast } from '../../main';
 
   import AddCategoryModal, {
     show as showAddCategoryModal,
@@ -512,9 +511,9 @@
         if (result.error) {
           const errorKey = `plugins.${pluginId}.errors.${result.error}`;
           const translatedError = $_(errorKey) !== errorKey ? $_(errorKey) : result.error;
-          showToast(`plugins.${pluginId}.toasts.error-saving`, { error: translatedError });
+          showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: translatedError });
         } else {
-          showToast(`plugins.${pluginId}.toasts.page-updated`);
+          showSuccessToast(`plugins.${pluginId}.toasts.page-updated`);
           initialFormStr = JSON.stringify(form);
         }
       } else {
@@ -535,16 +534,16 @@
         if (result.error) {
           const errorKey = `plugins.${pluginId}.errors.${result.error}`;
           const translatedError = $_(errorKey) !== errorKey ? $_(errorKey) : result.error;
-          showToast(`plugins.${pluginId}.toasts.error-saving`, { error: translatedError });
+          showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: translatedError });
         } else {
-          showToast(`plugins.${pluginId}.toasts.page-added`);
+          showSuccessToast(`plugins.${pluginId}.toasts.page-added`);
           const responseData = result.data || result;
           goto(`${base}/media-pages/edit/${responseData.id}`);
         }
       }
     } catch (e) {
       console.error(e);
-      showToast(`plugins.${pluginId}.toasts.error-saving`, {
+      showErrorToast(`plugins.${pluginId}.toasts.error-saving`, {
         error: $_(`plugins.${pluginId}.errors.ERROR_GENERAL`),
       });
     } finally {
@@ -605,11 +604,11 @@
             ? { ...c, category: { ...c.category, visible: newVisible } }
             : c,
         );
-        showToast(`plugins.${pluginId}.toasts.category-updated`);
+        showSuccessToast(`plugins.${pluginId}.toasts.category-updated`);
       } else if (result?.error) {
         const errorKey = `plugins.${pluginId}.errors.${result.error}`;
         const translatedError = $_(errorKey) !== errorKey ? $_(errorKey) : result.error;
-        showToast(`plugins.${pluginId}.toasts.error-saving`, { error: translatedError });
+        showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: translatedError });
       }
     } catch (e) {
       console.error(e);
@@ -690,11 +689,11 @@
         },
       });
       if (result && !result.error) {
-        showToast(`plugins.${pluginId}.toasts.category-updated`);
+        showSuccessToast(`plugins.${pluginId}.toasts.category-updated`);
       } else if (result?.error) {
         const errorKey = `plugins.${pluginId}.errors.${result.error}`;
         const translatedError = $_(errorKey) !== errorKey ? $_(errorKey) : result.error;
-        showToast(`plugins.${pluginId}.toasts.error-saving`, { error: translatedError });
+        showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: translatedError });
       }
     } catch (e) {
       console.error('Failed to save category order', e);
@@ -708,7 +707,7 @@
 
   setMoveCategoryCallback((movedCategory) => {
     categories = categories.filter((c) => c.category.id !== movedCategory.id);
-    showToast(`plugins.${pluginId}.toasts.category-moved`);
+    showSuccessToast(`plugins.${pluginId}.toasts.category-moved`);
   });
 
   // Media upload via modal
@@ -835,11 +834,11 @@
         },
       });
       if (result && !result.error) {
-        showToast(`plugins.${pluginId}.toasts.media-updated`);
+        showSuccessToast(`plugins.${pluginId}.toasts.media-updated`);
       } else if (result?.error) {
         const errorKey = `plugins.${pluginId}.errors.${result.error}`;
         const translatedError = $_(errorKey) !== errorKey ? $_(errorKey) : result.error;
-        showToast(`plugins.${pluginId}.toasts.error-saving`, { error: translatedError });
+        showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: translatedError });
       }
     } catch (e) {
       console.error('Failed to save media order', e);

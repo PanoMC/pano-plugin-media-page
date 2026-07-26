@@ -84,8 +84,7 @@
 
 <script>
   import { onMount } from 'svelte';
-  import { showToast } from '@panomc/sdk/toasts';
-  import { _, pluginId } from '../../../main';
+  import { _, pluginId, showSuccessToast, showErrorToast } from '../../../main';
 
   let loading = false;
   let moving = false;
@@ -123,16 +122,16 @@
 
       if (result && !result.error) {
         callback($category);
-        showToast(`plugins.${pluginId}.toasts.category-moved`);
+        showSuccessToast(`plugins.${pluginId}.toasts.category-moved`);
         hide();
       } else {
-        showToast(`plugins.${pluginId}.toasts.error-saving`, {
+        showErrorToast(`plugins.${pluginId}.toasts.error-saving`, {
           error: result?.error || 'Unknown error',
         });
       }
     } catch (e) {
       console.error(e);
-      showToast(`plugins.${pluginId}.toasts.error-saving`, { error: 'An error occurred' });
+      showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: 'An error occurred' });
     } finally {
       moving = false;
     }

@@ -54,8 +54,7 @@
 </script>
 
 <script>
-  import { showToast } from '@panomc/sdk/toasts';
-  import { _, pluginId } from '../../../main';
+  import { _, pluginId, showSuccessToast, showErrorToast } from '../../../main';
 
   let loading = false;
   let title = '';
@@ -83,15 +82,15 @@
       });
 
       if (result.error) {
-        showToast(`plugins.${pluginId}.toasts.error-saving`, { error: result.error });
+        showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: result.error });
       } else {
         callback({ ...$category, title, description });
-        showToast(`plugins.${pluginId}.toasts.category-updated`);
+        showSuccessToast(`plugins.${pluginId}.toasts.category-updated`);
         hide();
       }
     } catch (e) {
       console.error(e);
-      showToast(`plugins.${pluginId}.toasts.error-saving`, { error: 'An error occurred' });
+      showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: 'An error occurred' });
     } finally {
       loading = false;
     }

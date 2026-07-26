@@ -240,8 +240,7 @@
 </script>
 
 <script>
-  import { showToast } from '@panomc/sdk/toasts';
-  import { _, pluginId } from '../../../main';
+  import { _, pluginId, showSuccessToast, showErrorToast } from '../../../main';
 
   let uploading = false;
   let uploadProgress = 0;
@@ -336,13 +335,13 @@
       });
 
       if (result && result.error) {
-        showToast(`plugins.${pluginId}.toasts.error-uploading`, { error: result.error });
+        showErrorToast(`plugins.${pluginId}.toasts.error-uploading`, { error: result.error });
       } else {
         const responseData = result?.data || result || {};
         const newItems = responseData.items || [];
 
         callback({ categoryId, items: newItems });
-        showToast(`plugins.${pluginId}.toasts.media-uploaded`);
+        showSuccessToast(`plugins.${pluginId}.toasts.media-uploaded`);
 
         // Reset form
         title = '';
@@ -353,7 +352,7 @@
       }
     } catch (e) {
       console.error(e);
-      showToast(`plugins.${pluginId}.toasts.error-uploading`, {
+      showErrorToast(`plugins.${pluginId}.toasts.error-uploading`, {
         error: $_(`plugins.${pluginId}.errors.ERROR_GENERAL`),
       });
     } finally {

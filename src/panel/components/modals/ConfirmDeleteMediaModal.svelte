@@ -48,8 +48,7 @@
 </script>
 
 <script>
-  import { showToast } from '@panomc/sdk/toasts';
-  import { _, pluginId } from '../../../main';
+  import { _, pluginId, showSuccessToast, showErrorToast } from '../../../main';
   let loading = false;
 
   async function onYesClick() {
@@ -60,15 +59,15 @@
       });
 
       if (result.error) {
-        showToast(`plugins.${pluginId}.toasts.error-deleting`, { error: result.error });
+        showErrorToast(`plugins.${pluginId}.toasts.error-deleting`, { error: result.error });
       } else {
-        showToast(`plugins.${pluginId}.toasts.media-deleted`);
+        showSuccessToast(`plugins.${pluginId}.toasts.media-deleted`);
         callback(get(item));
         hide();
       }
     } catch (e) {
       console.error(e);
-      showToast(`plugins.${pluginId}.toasts.error-deleting`, { error: 'An error occurred' });
+      showErrorToast(`plugins.${pluginId}.toasts.error-deleting`, { error: 'An error occurred' });
     } finally {
       loading = false;
     }
