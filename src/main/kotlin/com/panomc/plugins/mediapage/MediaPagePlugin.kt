@@ -3,7 +3,6 @@ package com.panomc.plugins.mediapage
 import com.panomc.platform.api.PanoPlugin
 import com.panomc.platform.api.PluginDatabaseManager
 import com.panomc.platform.setup.SetupManager
-import com.panomc.plugins.license.PluginLicenseClient
 import java.io.File
 
 class MediaPagePlugin : PanoPlugin() {
@@ -14,11 +13,6 @@ class MediaPagePlugin : PanoPlugin() {
     private val setupManager by lazy {
         applicationContext.getBean(SetupManager::class.java)
     }
-
-    /**
-     * Premium plugin: enforce a panomc.com license at startup. No-op for free builds.
-     */
-    private val licenseClient by lazy { PluginLicenseClient(this) }
 
     val uploadsDir: File by lazy {
         File(pluginDataFolder, "uploads")
@@ -31,18 +25,9 @@ class MediaPagePlugin : PanoPlugin() {
     private var isInitialized = false
 
     override suspend fun onStart() {
-        // Verify license BEFORE doing any startup work. If invalid, throws and the
-        // host marks this plugin failed and records the failure for the panel UI.
-        // Pano core itself keeps running so the operator can resolve the issue.
-        licenseClient.requireValidLicense()
-
         logger.info("Starting...")
 
         startPlugin()
-    }
-
-    override suspend fun verifyLicense() {
-        licenseClient.requireValidLicense()
     }
 
     suspend fun startPlugin() {
