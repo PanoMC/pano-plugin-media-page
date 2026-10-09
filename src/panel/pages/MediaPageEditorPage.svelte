@@ -294,19 +294,19 @@
                   <div class="media-preview">
                     {#if item.type === 'IMAGE'}
                       <img
-                        src="/api/media/file/{item.thumbnailPath || item.filePath}"
+                        src="/api/plugins/pano-plugin-media-page/media/file/{item.thumbnailPath || item.filePath}"
                         alt={item.title}
                         loading="lazy" />
                     {:else}
                       <div class="video-preview">
                         {#if item.thumbnailPath}
                           <img
-                            src="/api/media/file/{item.thumbnailPath}"
+                            src="/api/plugins/pano-plugin-media-page/media/file/{item.thumbnailPath}"
                             alt={item.title}
                             loading="lazy" />
                         {:else}
                           <video
-                            src="/api/media/file/{item.filePath}#t=0.1"
+                            src="/api/plugins/pano-plugin-media-page/media/file/{item.filePath}#t=0.1"
                             preload="metadata"
                             muted></video>
                         {/if}
@@ -361,7 +361,7 @@
 </article>
 
 <script context="module">
-  import ApiUtil from '@panomc/sdk/utils/api';
+  import { api } from '@panomc/sdk/plugin-api';
   import { error } from '@panomc/sdk/svelte';
   import { pluginId } from '../../main';
 
@@ -374,8 +374,8 @@
     if (isEditing) {
       pageTitle.set(`plugins.${pluginId}.media-pages.editor.edit-title`);
 
-      const body = await ApiUtil.get({
-        path: `/api/panel/media-pages/${params.id}`,
+      const body = await api.panel.get({
+        path: `/media-pages/${params.id}`,
         request: event,
       });
 
@@ -503,14 +503,14 @@
     saving = true;
     try {
       if (isEditing) {
-        const result = await ApiUtil.put({
-          path: `/api/panel/media-pages/${data.mediaPage.id}`,
+        const result = await api.panel.put({
+          path: `/media-pages/${data.mediaPage.id}`,
           body: form,
         });
 
         if (result.error) {
-          const errorKey = `plugins.${pluginId}.errors.${result.error}`;
-          const translatedError = $_(errorKey) !== errorKey ? $_(errorKey) : result.error;
+          const errorKey = `plugins.${pluginId}.errors.${result.error.code}`;
+          const translatedError = $_(errorKey) !== errorKey ? $_(errorKey) : result.error.message || result.error.code;
           showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: translatedError });
         } else {
           showSuccessToast(`plugins.${pluginId}.toasts.page-updated`);
@@ -526,14 +526,14 @@
           }));
         }
 
-        const result = await ApiUtil.post({
-          path: '/api/panel/media-pages',
+        const result = await api.panel.post({
+          path: '/media-pages',
           body: postBody,
         });
 
         if (result.error) {
-          const errorKey = `plugins.${pluginId}.errors.${result.error}`;
-          const translatedError = $_(errorKey) !== errorKey ? $_(errorKey) : result.error;
+          const errorKey = `plugins.${pluginId}.errors.${result.error.code}`;
+          const translatedError = $_(errorKey) !== errorKey ? $_(errorKey) : result.error.message || result.error.code;
           showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: translatedError });
         } else {
           showSuccessToast(`plugins.${pluginId}.toasts.page-added`);
@@ -593,8 +593,8 @@
       return;
     }
     try {
-      const result = await ApiUtil.put({
-        path: `/api/panel/media-categories/${category.id}/visibility`,
+      const result = await api.panel.put({
+        path: `/media-categories/${category.id}/visibility`,
       });
 
       if (result && !result.error) {
@@ -606,8 +606,8 @@
         );
         showSuccessToast(`plugins.${pluginId}.toasts.category-updated`);
       } else if (result?.error) {
-        const errorKey = `plugins.${pluginId}.errors.${result.error}`;
-        const translatedError = $_(errorKey) !== errorKey ? $_(errorKey) : result.error;
+        const errorKey = `plugins.${pluginId}.errors.${result.error.code}`;
+        const translatedError = $_(errorKey) !== errorKey ? $_(errorKey) : result.error.message || result.error.code;
         showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: translatedError });
       }
     } catch (e) {
@@ -679,8 +679,8 @@
   async function saveCategoryOrder() {
     if (!isEditing) return;
     try {
-      const result = await ApiUtil.put({
-        path: '/api/panel/media-categories/reorder',
+      const result = await api.panel.put({
+        path: '/media-categories/reorder',
         body: {
           categories: categories.map((c, i) => ({
             id: c.category.id,
@@ -691,8 +691,8 @@
       if (result && !result.error) {
         showSuccessToast(`plugins.${pluginId}.toasts.category-updated`);
       } else if (result?.error) {
-        const errorKey = `plugins.${pluginId}.errors.${result.error}`;
-        const translatedError = $_(errorKey) !== errorKey ? $_(errorKey) : result.error;
+        const errorKey = `plugins.${pluginId}.errors.${result.error.code}`;
+        const translatedError = $_(errorKey) !== errorKey ? $_(errorKey) : result.error.message || result.error.code;
         showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: translatedError });
       }
     } catch (e) {
@@ -824,8 +824,8 @@
 
   async function saveMediaOrder(categoryId, items) {
     try {
-      const result = await ApiUtil.put({
-        path: '/api/panel/media-items/reorder',
+      const result = await api.panel.put({
+        path: '/media-items/reorder',
         body: {
           items: items.map((item, i) => ({
             id: item.id,
@@ -836,8 +836,8 @@
       if (result && !result.error) {
         showSuccessToast(`plugins.${pluginId}.toasts.media-updated`);
       } else if (result?.error) {
-        const errorKey = `plugins.${pluginId}.errors.${result.error}`;
-        const translatedError = $_(errorKey) !== errorKey ? $_(errorKey) : result.error;
+        const errorKey = `plugins.${pluginId}.errors.${result.error.code}`;
+        const translatedError = $_(errorKey) !== errorKey ? $_(errorKey) : result.error.message || result.error.code;
         showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: translatedError });
       }
     } catch (e) {

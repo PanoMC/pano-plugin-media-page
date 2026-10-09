@@ -1,6 +1,7 @@
 package com.panomc.plugins.mediapage.db.impl
 
 import com.panomc.platform.annotation.Dao
+import com.panomc.platform.model.PageRequest
 import com.panomc.plugins.mediapage.db.dao.MediaPageDao
 import com.panomc.plugins.mediapage.db.model.MediaPage
 import io.vertx.kotlin.coroutines.coAwait
@@ -85,14 +86,13 @@ class MediaPageDaoImpl : MediaPageDao() {
             .coAwait()
     }
 
-    override suspend fun getAllByPage(page: Long, sqlClient: SqlClient): List<MediaPage> {
-        val offset = (page - 1) * 10
+    override suspend fun getAllByPage(page: PageRequest, sqlClient: SqlClient): List<MediaPage> {
         val query =
-            "SELECT ${fields.toTableQuery()} FROM `${getTablePrefix() + tableName}` ORDER BY `sortOrder` ASC, `id` DESC LIMIT 10 OFFSET ?"
+            "SELECT ${fields.toTableQuery()} FROM `${getTablePrefix() + tableName}` ORDER BY `sortOrder` ASC, `id` DESC LIMIT ? OFFSET ?"
 
         val rows: RowSet<Row> = sqlClient
             .preparedQuery(query)
-            .execute(Tuple.of(offset))
+            .execute(Tuple.of(page.limit, page.offset))
             .coAwait()
 
         return rows.toEntities()

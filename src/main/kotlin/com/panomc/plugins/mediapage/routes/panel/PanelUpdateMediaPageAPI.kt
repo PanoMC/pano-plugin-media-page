@@ -17,9 +17,9 @@ import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.handler.BodyHandler
 import io.vertx.ext.web.validation.RequestPredicate
 import io.vertx.ext.web.validation.ValidationHandler
-import io.vertx.ext.web.validation.builder.Bodies.json
-import io.vertx.ext.web.validation.builder.Parameters.param
-import io.vertx.ext.web.validation.builder.ValidationHandlerBuilder
+import com.panomc.platform.schema.dsl.Bodies.json
+import com.panomc.platform.schema.dsl.Parameters.param
+import com.panomc.platform.schema.dsl.ValidationHandlerBuilder
 import io.vertx.json.schema.SchemaRepository
 import io.vertx.json.schema.common.dsl.Schemas.*
 
@@ -28,7 +28,7 @@ class PanelUpdateMediaPageAPI(
     private val plugin: MediaPagePlugin,
     private val mediaPageDao: MediaPageDao
 ) : PanelApi() {
-    override val paths = listOf(Path("/api/panel/media-pages/:id", RouteType.PUT))
+    override val paths = listOf(Path("/media-pages/:id", RouteType.PUT))
 
     private val authProvider: AuthProvider by lazy {
         plugin.applicationContext.getBean(AuthProvider::class.java)

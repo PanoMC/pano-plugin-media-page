@@ -22,7 +22,7 @@
 
 <script context="module">
   import { get, writable } from 'svelte/store';
-  import ApiUtil from '@panomc/sdk/utils/api';
+  import { api } from '@panomc/sdk/plugin-api';
 
   const modalElement = writable();
   const category = writable({});
@@ -54,12 +54,12 @@
   async function onYesClick() {
     loading = true;
     try {
-      const result = await ApiUtil.delete({
-        path: `/api/panel/media-categories/${get(category).id}`,
+      const result = await api.panel.delete({
+        path: `/media-categories/${get(category).id}`,
       });
 
       if (result.error) {
-        showErrorToast(`plugins.${pluginId}.toasts.error-deleting`, { error: result.error });
+        showErrorToast(`plugins.${pluginId}.toasts.error-deleting`, { error: result.error.message || result.error.code });
       } else {
         showSuccessToast(`plugins.${pluginId}.toasts.category-deleted`);
         callback(get(category));

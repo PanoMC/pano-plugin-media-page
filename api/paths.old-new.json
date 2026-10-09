@@ -1,0 +1,146 @@
+[
+  {
+    "method": "GET",
+    "old": "/api/media-pages",
+    "new": "/api/plugins/pano-plugin-media-page/media-pages",
+    "relative": "/plugins/pano-plugin-media-page/media-pages",
+    "class": "GetMediaPagesAPI",
+    "file": "src/main/kotlin/com/panomc/plugins/mediapage/routes/api/GetMediaPagesAPI.kt"
+  },
+  {
+    "method": "GET",
+    "old": "/api/media-pages/:slug",
+    "new": "/api/plugins/pano-plugin-media-page/media-pages/:slug",
+    "relative": "/plugins/pano-plugin-media-page/media-pages/:slug",
+    "class": "GetMediaPageBySlugAPI",
+    "file": "src/main/kotlin/com/panomc/plugins/mediapage/routes/api/GetMediaPageBySlugAPI.kt"
+  },
+  {
+    "method": "GET",
+    "old": "/api/media/file/:fileName",
+    "new": "/api/plugins/pano-plugin-media-page/media/file/:fileName",
+    "relative": "/plugins/pano-plugin-media-page/media/file/:fileName",
+    "class": "GetMediaFileAPI",
+    "file": "src/main/kotlin/com/panomc/plugins/mediapage/routes/api/GetMediaFileAPI.kt"
+  },
+  {
+    "method": "DELETE",
+    "old": "/api/panel/media-categories/:id",
+    "new": "/api/plugins/pano-plugin-media-page/panel/media-categories/:id",
+    "relative": "/plugins/pano-plugin-media-page/panel/media-categories/:id",
+    "class": "PanelDeleteCategoryAPI",
+    "file": "src/main/kotlin/com/panomc/plugins/mediapage/routes/panel/PanelDeleteCategoryAPI.kt"
+  },
+  {
+    "method": "PUT",
+    "old": "/api/panel/media-categories/:id",
+    "new": "/api/plugins/pano-plugin-media-page/panel/media-categories/:id",
+    "relative": "/plugins/pano-plugin-media-page/panel/media-categories/:id",
+    "class": "PanelUpdateCategoryAPI",
+    "file": "src/main/kotlin/com/panomc/plugins/mediapage/routes/panel/PanelUpdateCategoryAPI.kt"
+  },
+  {
+    "method": "PUT",
+    "old": "/api/panel/media-categories/:id/move",
+    "new": "/api/plugins/pano-plugin-media-page/panel/media-categories/:id/move",
+    "relative": "/plugins/pano-plugin-media-page/panel/media-categories/:id/move",
+    "class": "PanelMoveCategoryAPI",
+    "file": "src/main/kotlin/com/panomc/plugins/mediapage/routes/panel/PanelMoveCategoryAPI.kt"
+  },
+  {
+    "method": "PUT",
+    "old": "/api/panel/media-categories/:id/visibility",
+    "new": "/api/plugins/pano-plugin-media-page/panel/media-categories/:id/visibility",
+    "relative": "/plugins/pano-plugin-media-page/panel/media-categories/:id/visibility",
+    "class": "PanelToggleCategoryVisibilityAPI",
+    "file": "src/main/kotlin/com/panomc/plugins/mediapage/routes/panel/PanelToggleCategoryVisibilityAPI.kt"
+  },
+  {
+    "method": "PUT",
+    "old": "/api/panel/media-categories/reorder",
+    "new": "/api/plugins/pano-plugin-media-page/panel/media-categories/reorder",
+    "relative": "/plugins/pano-plugin-media-page/panel/media-categories/reorder",
+    "class": "PanelReorderCategoriesAPI",
+    "file": "src/main/kotlin/com/panomc/plugins/mediapage/routes/panel/PanelReorderCategoriesAPI.kt"
+  },
+  {
+    "method": "DELETE",
+    "old": "/api/panel/media-items/:id",
+    "new": "/api/plugins/pano-plugin-media-page/panel/media-items/:id",
+    "relative": "/plugins/pano-plugin-media-page/panel/media-items/:id",
+    "class": "PanelDeleteMediaAPI",
+    "file": "src/main/kotlin/com/panomc/plugins/mediapage/routes/panel/PanelDeleteMediaAPI.kt"
+  },
+  {
+    "method": "PUT",
+    "old": "/api/panel/media-items/:id",
+    "new": "/api/plugins/pano-plugin-media-page/panel/media-items/:id",
+    "relative": "/plugins/pano-plugin-media-page/panel/media-items/:id",
+    "class": "PanelUpdateMediaAPI",
+    "file": "src/main/kotlin/com/panomc/plugins/mediapage/routes/panel/PanelUpdateMediaAPI.kt"
+  },
+  {
+    "method": "PUT",
+    "old": "/api/panel/media-items/reorder",
+    "new": "/api/plugins/pano-plugin-media-page/panel/media-items/reorder",
+    "relative": "/plugins/pano-plugin-media-page/panel/media-items/reorder",
+    "class": "PanelReorderMediaAPI",
+    "file": "src/main/kotlin/com/panomc/plugins/mediapage/routes/panel/PanelReorderMediaAPI.kt"
+  },
+  {
+    "method": "POST",
+    "old": "/api/panel/media-items/upload/:categoryId",
+    "new": "/api/plugins/pano-plugin-media-page/panel/media-items/upload/:categoryId",
+    "relative": "/plugins/pano-plugin-media-page/panel/media-items/upload/:categoryId",
+    "class": "PanelUploadMediaAPI",
+    "file": "src/main/kotlin/com/panomc/plugins/mediapage/routes/panel/PanelUploadMediaAPI.kt"
+  },
+  {
+    "method": "GET",
+    "old": "/api/panel/media-pages",
+    "new": "/api/plugins/pano-plugin-media-page/panel/media-pages",
+    "relative": "/plugins/pano-plugin-media-page/panel/media-pages",
+    "class": "PanelGetMediaPagesAPI",
+    "file": "src/main/kotlin/com/panomc/plugins/mediapage/routes/panel/PanelGetMediaPagesAPI.kt"
+  },
+  {
+    "method": "POST",
+    "old": "/api/panel/media-pages",
+    "new": "/api/plugins/pano-plugin-media-page/panel/media-pages",
+    "relative": "/plugins/pano-plugin-media-page/panel/media-pages",
+    "class": "PanelAddMediaPageAPI",
+    "file": "src/main/kotlin/com/panomc/plugins/mediapage/routes/panel/PanelAddMediaPageAPI.kt"
+  },
+  {
+    "method": "DELETE",
+    "old": "/api/panel/media-pages/:id",
+    "new": "/api/plugins/pano-plugin-media-page/panel/media-pages/:id",
+    "relative": "/plugins/pano-plugin-media-page/panel/media-pages/:id",
+    "class": "PanelDeleteMediaPageAPI",
+    "file": "src/main/kotlin/com/panomc/plugins/mediapage/routes/panel/PanelDeleteMediaPageAPI.kt"
+  },
+  {
+    "method": "GET",
+    "old": "/api/panel/media-pages/:id",
+    "new": "/api/plugins/pano-plugin-media-page/panel/media-pages/:id",
+    "relative": "/plugins/pano-plugin-media-page/panel/media-pages/:id",
+    "class": "PanelGetMediaPageAPI",
+    "file": "src/main/kotlin/com/panomc/plugins/mediapage/routes/panel/PanelGetMediaPageAPI.kt"
+  },
+  {
+    "method": "PUT",
+    "old": "/api/panel/media-pages/:id",
+    "new": "/api/plugins/pano-plugin-media-page/panel/media-pages/:id",
+    "relative": "/plugins/pano-plugin-media-page/panel/media-pages/:id",
+    "class": "PanelUpdateMediaPageAPI",
+    "file": "src/main/kotlin/com/panomc/plugins/mediapage/routes/panel/PanelUpdateMediaPageAPI.kt"
+  },
+  {
+    "method": "POST",
+    "old": "/api/panel/media-pages/:pageId/categories",
+    "new": "/api/plugins/pano-plugin-media-page/panel/media-pages/:pageId/categories",
+    "relative": "/plugins/pano-plugin-media-page/panel/media-pages/:pageId/categories",
+    "class": "PanelAddCategoryAPI",
+    "file": "src/main/kotlin/com/panomc/plugins/mediapage/routes/panel/PanelAddCategoryAPI.kt"
+  }
+]

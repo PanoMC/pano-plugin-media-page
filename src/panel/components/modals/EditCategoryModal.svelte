@@ -28,7 +28,7 @@
 
 <script context="module">
   import { get, writable } from 'svelte/store';
-  import ApiUtil from '@panomc/sdk/utils/api';
+  import { api } from '@panomc/sdk/plugin-api';
 
   const modalElement = writable();
   const category = writable({});
@@ -76,13 +76,13 @@
         return;
       }
 
-      const result = await ApiUtil.put({
-        path: `/api/panel/media-categories/${$category.id}`,
+      const result = await api.panel.put({
+        path: `/media-categories/${$category.id}`,
         body: { title, description },
       });
 
       if (result.error) {
-        showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: result.error });
+        showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: result.error.message || result.error.code });
       } else {
         callback({ ...$category, title, description });
         showSuccessToast(`plugins.${pluginId}.toasts.category-updated`);

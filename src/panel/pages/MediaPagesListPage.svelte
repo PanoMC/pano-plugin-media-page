@@ -37,10 +37,9 @@
       </div>
       <div class="card-footer">
         <Pagination
-          page={data.page}
-          totalPage={data.totalPage}
+          {...paginationProps(data.page, data.pageInfo)}
           on:firstPageClick={() => onPageClick(1)}
-          on:lastPageClick={() => onPageClick(data.totalPage)}
+          on:lastPageClick={() => onPageClick(data.pageInfo.totalPages)}
           on:pageLinkClick={(event) => onPageClick(event.detail.page)} />
       </div>
     {/if}
@@ -50,7 +49,8 @@
 </article>
 
 <script context="module">
-  import ApiUtil from '@panomc/sdk/utils/api';
+  import { api } from '@panomc/sdk/plugin-api';
+  import { paginationProps } from '../pagination.js';
   import { pluginId } from '../../main';
 
   export async function load(event) {
@@ -64,19 +64,30 @@
 
     const page = searchParams.get('page') || 1;
 
-    const body = await ApiUtil.get({
-      path: `/api/panel/media-pages?page=${page}`,
+    const body = await api.panel.get({
+      path: `/media-pages?page=${page}`,
       request: event,
     });
 
     if (body.error) {
-      return { data: { mediaPages: [], totalPage: 1, page: 1, pageCount: 0 } };
+      return {
+        data: {
+          mediaPages: [],
+          pageInfo: { number: 1, size: 10, totalItems: 0, totalPages: 1 },
+          page: 1,
+          pageCount: 0,
+        },
+      };
     }
 
-    const data = body.data || body;
-    data.page = parseInt(page);
-
-    return { data: data };
+    return {
+      data: {
+        mediaPages: body.items,
+        pageInfo: body.page,
+        page: parseInt(page),
+        pageCount: body.page.totalItems,
+      },
+    };
   }
 </script>
 

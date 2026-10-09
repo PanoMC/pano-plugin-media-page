@@ -33,7 +33,7 @@
 
 <script context="module">
   import { get, writable } from 'svelte/store';
-  import ApiUtil from '@panomc/sdk/utils/api';
+  import { api } from '@panomc/sdk/plugin-api';
 
   const modalElement = writable();
   let pageId = null;
@@ -77,13 +77,13 @@
         return;
       }
 
-      const result = await ApiUtil.post({
-        path: `/api/panel/media-pages/${pageId}/categories`,
+      const result = await api.panel.post({
+        path: `/media-pages/${pageId}/categories`,
         body: { title, description },
       });
 
       if (result.error) {
-        showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: result.error });
+        showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: result.error.message || result.error.code });
       } else {
         const data = result.data || result;
         callback({ id: data.id, pageId, title, description, sortOrder: 0 });

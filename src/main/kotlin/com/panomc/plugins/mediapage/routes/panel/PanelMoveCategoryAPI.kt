@@ -11,9 +11,9 @@ import com.panomc.plugins.mediapage.db.dao.MediaPageDao
 import com.panomc.plugins.mediapage.permission.ManageMediaPagePermission
 import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.validation.ValidationHandler
-import io.vertx.ext.web.validation.builder.Bodies
-import io.vertx.ext.web.validation.builder.Parameters.param
-import io.vertx.ext.web.validation.builder.ValidationHandlerBuilder
+import com.panomc.platform.schema.dsl.Bodies
+import com.panomc.platform.schema.dsl.Parameters.param
+import com.panomc.platform.schema.dsl.ValidationHandlerBuilder
 import io.vertx.json.schema.SchemaRepository
 import io.vertx.json.schema.common.dsl.Schemas.numberSchema
 import io.vertx.json.schema.common.dsl.Schemas.objectSchema
@@ -24,7 +24,7 @@ class PanelMoveCategoryAPI(
     private val mediaCategoryDao: MediaCategoryDao,
     private val mediaPageDao: MediaPageDao
 ) : PanelApi() {
-    override val paths = listOf(Path("/api/panel/media-categories/:id/move", RouteType.PUT))
+    override val paths = listOf(Path("/media-categories/:id/move", RouteType.PUT))
 
     private val authProvider: AuthProvider by lazy {
         plugin.applicationContext.getBean(AuthProvider::class.java)

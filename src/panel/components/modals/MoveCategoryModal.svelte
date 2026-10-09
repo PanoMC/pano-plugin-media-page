@@ -53,7 +53,7 @@
 
 <script context="module">
   import { get, writable } from 'svelte/store';
-  import ApiUtil from '@panomc/sdk/utils/api';
+  import { api } from '@panomc/sdk/plugin-api';
 
   const modalElement = writable();
   const category = writable({});
@@ -97,10 +97,10 @@
     loading = true;
     selectedPageId = null;
     try {
-      const result = await ApiUtil.get({
-        path: '/api/panel/media-pages',
+      const result = await api.panel.get({
+        path: '/media-pages',
       });
-      const allPages = result?.data?.mediaPages || result?.mediaPages || [];
+      const allPages = result?.items || [];
       // Filter out current page
       pages = allPages.filter((p) => p.id !== currentPageId);
     } catch (e) {
@@ -115,8 +115,8 @@
     if (!selectedPageId) return;
     moving = true;
     try {
-      const result = await ApiUtil.put({
-        path: `/api/panel/media-categories/${$category.id}/move`,
+      const result = await api.panel.put({
+        path: `/media-categories/${$category.id}/move`,
         body: { targetPageId: selectedPageId },
       });
 
@@ -126,7 +126,7 @@
         hide();
       } else {
         showErrorToast(`plugins.${pluginId}.toasts.error-saving`, {
-          error: result?.error || 'Unknown error',
+          error: result?.error?.message || result?.error?.code || 'Unknown error',
         });
       }
     } catch (e) {

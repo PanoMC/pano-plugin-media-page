@@ -10,10 +10,12 @@ import com.panomc.plugins.mediapage.db.dao.MediaItemDao
 import com.panomc.plugins.mediapage.db.dao.MediaPageDao
 import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.validation.ValidationHandler
-import io.vertx.ext.web.validation.builder.Parameters.param
-import io.vertx.ext.web.validation.builder.ValidationHandlerBuilder
+import com.panomc.platform.schema.dsl.Parameters.param
+import com.panomc.platform.schema.dsl.ValidationHandlerBuilder
 import io.vertx.json.schema.SchemaRepository
 import io.vertx.json.schema.common.dsl.Schemas.stringSchema
+import com.panomc.platform.schema.EndpointDoc
+import io.vertx.json.schema.common.dsl.Schemas.*
 
 @Endpoint
 class GetMediaPageBySlugAPI(
@@ -22,7 +24,65 @@ class GetMediaPageBySlugAPI(
     private val mediaCategoryDao: MediaCategoryDao,
     private val mediaItemDao: MediaItemDao
 ) : Api() {
-    override val paths = listOf(Path("/api/media-pages/:slug", RouteType.GET))
+    override val paths = listOf(Path("/media-pages/:slug", RouteType.GET))
+
+    override val doc = EndpointDoc(
+        summary = "One media page with its visible categories and their items.",
+        tag = "media-pages",
+        response = objectSchema()
+            .requiredProperty(
+                "mediaPage",
+                objectSchema()
+                .requiredProperty("id", intSchema())
+                .requiredProperty("title", stringSchema())
+                .requiredProperty("slug", stringSchema())
+                .requiredProperty("active", booleanSchema())
+                .optionalProperty("description", stringSchema())
+                .optionalProperty("registerToThemeNav", booleanSchema())
+                .optionalProperty("sortOrder", intSchema())
+                .optionalProperty("createdAt", intSchema())
+                .optionalProperty("updatedAt", intSchema())
+            )
+            .requiredProperty(
+                "categories",
+                arraySchema().items(
+                    objectSchema()
+                        .requiredProperty(
+                            "category",
+                            objectSchema()
+                            .requiredProperty("id", intSchema())
+                            .requiredProperty("pageId", intSchema())
+                            .requiredProperty("title", stringSchema())
+                            .optionalProperty("description", stringSchema())
+                            .optionalProperty("visible", booleanSchema())
+                            .optionalProperty("sortOrder", intSchema())
+                            .optionalProperty("createdAt", intSchema())
+                        )
+                        .requiredProperty(
+                            "items",
+                            arraySchema().items(
+                                objectSchema()
+                            .requiredProperty("id", intSchema())
+                            .requiredProperty("categoryId", intSchema())
+                            .requiredProperty("type", stringSchema())
+                            .requiredProperty("filePath", stringSchema())
+                            .optionalProperty("title", stringSchema())
+                            .optionalProperty("description", stringSchema())
+                            .optionalProperty("thumbnailPath", stringSchema())
+                            .optionalProperty("originalFileName", stringSchema())
+                            .optionalProperty("mimeType", stringSchema())
+                            .optionalProperty("fileSize", intSchema())
+                            .optionalProperty("width", intSchema())
+                            .optionalProperty("height", intSchema())
+                            .optionalProperty("duration", intSchema())
+                            .optionalProperty("sortOrder", intSchema())
+                            .optionalProperty("createdAt", intSchema())
+                            )
+                        )
+                )
+            ),
+        errors = listOf(NotFound::class)
+    )
 
     private val databaseManager: DatabaseManager by lazy {
         plugin.applicationContext.getBean(DatabaseManager::class.java)

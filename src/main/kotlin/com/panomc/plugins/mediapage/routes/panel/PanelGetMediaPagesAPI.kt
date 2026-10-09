@@ -9,18 +9,15 @@ import com.panomc.plugins.mediapage.db.dao.MediaPageDao
 import com.panomc.plugins.mediapage.permission.ManageMediaPagePermission
 import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.validation.ValidationHandler
-import io.vertx.ext.web.validation.builder.Parameters.optionalParam
-import io.vertx.ext.web.validation.builder.ValidationHandlerBuilder
+import com.panomc.platform.schema.dsl.ValidationHandlerBuilder
 import io.vertx.json.schema.SchemaRepository
-import io.vertx.json.schema.common.dsl.Schemas.numberSchema
-import kotlin.math.ceil
 
 @Endpoint
 class PanelGetMediaPagesAPI(
     private val plugin: MediaPagePlugin,
     private val mediaPageDao: MediaPageDao
 ) : PanelApi() {
-    override val paths = listOf(Path("/api/panel/media-pages", RouteType.GET))
+    override val paths = listOf(Path("/media-pages", RouteType.GET))
 
     private val authProvider: AuthProvider by lazy {
         plugin.applicationContext.getBean(AuthProvider::class.java)
@@ -31,30 +28,21 @@ class PanelGetMediaPagesAPI(
     }
 
     override fun getValidationHandler(schemaRepository: SchemaRepository): ValidationHandler {
-        return ValidationHandlerBuilder.create(schemaRepository)
-            .queryParameter(optionalParam("page", numberSchema()))
-            .build()
+        return Paging.params(ValidationHandlerBuilder.create(schemaRepository)).build()
     }
 
     override suspend fun handle(context: RoutingContext): Result {
         authProvider.requirePermission(ManageMediaPagePermission(), context)
 
-        val parameters = getParameters(context)
-        val page = parameters.queryParameter("page")?.long ?: 1L
+        val page = Paging.request(context)
 
         val sqlClient = databaseManager.getSqlClient()
-        val pages = mediaPageDao.getAllByPage(page, sqlClient)
         val count = mediaPageDao.count(sqlClient)
 
-        var totalPageNum = ceil(count.toDouble() / 10).toLong()
-        if (totalPageNum == 0L) totalPageNum = 1L
+        Paging.requireInRange(page, count)
 
-        return Successful(
-            mapOf(
-                "mediaPages" to pages,
-                "totalPage" to totalPageNum,
-                "pageCount" to count
-            )
-        )
+        val pages = mediaPageDao.getAllByPage(page, sqlClient)
+
+        return Successful(Paging.response(pages, count, page))
     }
 }

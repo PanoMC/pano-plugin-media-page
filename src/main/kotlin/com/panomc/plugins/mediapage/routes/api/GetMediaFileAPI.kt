@@ -6,17 +6,27 @@ import com.panomc.platform.util.MimeTypeUtil
 import com.panomc.plugins.mediapage.MediaPagePlugin
 import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.validation.ValidationHandler
-import io.vertx.ext.web.validation.builder.Parameters
-import io.vertx.ext.web.validation.builder.ValidationHandlerBuilder
+import com.panomc.platform.schema.dsl.Parameters
+import com.panomc.platform.schema.dsl.ValidationHandlerBuilder
 import io.vertx.json.schema.SchemaRepository
 import io.vertx.json.schema.common.dsl.Schemas.stringSchema
 import java.io.File
+import com.panomc.platform.schema.EndpointDoc
+import io.vertx.json.schema.common.dsl.Schemas.*
+import com.panomc.platform.error.NotFound
 
 @Endpoint
 class GetMediaFileAPI(
     private val plugin: MediaPagePlugin
 ) : Api() {
-    override val paths = listOf(Path("/api/media/file/:fileName", RouteType.GET))
+    override val paths = listOf(Path("/media/file/:fileName", RouteType.GET))
+
+    override val doc = EndpointDoc(
+        summary = "An uploaded media file or its thumbnail.",
+        tag = "media-pages",
+        binary = true,
+        errors = listOf(NotFound::class)
+    )
 
     companion object {
         private const val CACHE_TTL_SECONDS = 7 * 24 * 60 * 60 // 1 week

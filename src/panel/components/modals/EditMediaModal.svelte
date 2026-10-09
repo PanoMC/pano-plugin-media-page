@@ -10,7 +10,7 @@
         {#if $item.type === 'IMAGE' && ($item.thumbnailPath || $item.filePath)}
           <div class="text-center mb-3">
             <img
-              src="/api/media/file/{$item.thumbnailPath || $item.filePath}"
+              src="/api/plugins/pano-plugin-media-page/media/file/{$item.thumbnailPath || $item.filePath}"
               alt={$item.title}
               class="img-fluid rounded"
               style="max-height: 200px;" />
@@ -61,7 +61,7 @@
 
 <script context="module">
   import { get, writable } from 'svelte/store';
-  import ApiUtil from '@panomc/sdk/utils/api';
+  import { api } from '@panomc/sdk/plugin-api';
 
   const modalElement = writable();
   const item = writable({});
@@ -111,13 +111,13 @@
   async function onSave() {
     loading = true;
     try {
-      const result = await ApiUtil.put({
-        path: `/api/panel/media-items/${$item.id}`,
+      const result = await api.panel.put({
+        path: `/media-items/${$item.id}`,
         body: { title, description },
       });
 
       if (result.error) {
-        showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: result.error });
+        showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: result.error.message || result.error.code });
       } else {
         callback({ ...$item, title, description });
         showSuccessToast(`plugins.${pluginId}.toasts.media-updated`);

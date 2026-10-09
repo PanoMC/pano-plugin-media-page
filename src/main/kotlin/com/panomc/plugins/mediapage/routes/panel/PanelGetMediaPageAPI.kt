@@ -12,8 +12,8 @@ import com.panomc.plugins.mediapage.db.dao.MediaPageDao
 import com.panomc.plugins.mediapage.permission.ManageMediaPagePermission
 import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.validation.ValidationHandler
-import io.vertx.ext.web.validation.builder.Parameters.param
-import io.vertx.ext.web.validation.builder.ValidationHandlerBuilder
+import com.panomc.platform.schema.dsl.Parameters.param
+import com.panomc.platform.schema.dsl.ValidationHandlerBuilder
 import io.vertx.json.schema.SchemaRepository
 import io.vertx.json.schema.common.dsl.Schemas.numberSchema
 
@@ -24,7 +24,7 @@ class PanelGetMediaPageAPI(
     private val mediaCategoryDao: MediaCategoryDao,
     private val mediaItemDao: MediaItemDao
 ) : PanelApi() {
-    override val paths = listOf(Path("/api/panel/media-pages/:id", RouteType.GET))
+    override val paths = listOf(Path("/media-pages/:id", RouteType.GET))
 
     private val authProvider: AuthProvider by lazy {
         plugin.applicationContext.getBean(AuthProvider::class.java)

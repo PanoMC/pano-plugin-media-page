@@ -213,7 +213,7 @@
 
 <script context="module">
   import { get, writable } from 'svelte/store';
-  import ApiUtil from '@panomc/sdk/utils/api';
+  import { api } from '@panomc/sdk/plugin-api';
 
   const modalElement = writable();
   let categoryId = null;
@@ -326,8 +326,8 @@
         formData.append('description', description.trim());
       }
 
-      const result = await ApiUtil.post({
-        path: `/api/panel/media-items/upload/${categoryId}`,
+      const result = await api.panel.post({
+        path: `/media-items/upload/${categoryId}`,
         body: formData,
         onUploadProgress: (progress) => {
           uploadProgress = progress * 100;
@@ -335,7 +335,7 @@
       });
 
       if (result && result.error) {
-        showErrorToast(`plugins.${pluginId}.toasts.error-uploading`, { error: result.error });
+        showErrorToast(`plugins.${pluginId}.toasts.error-uploading`, { error: result.error.message || result.error.code });
       } else {
         const responseData = result?.data || result || {};
         const newItems = responseData.items || [];

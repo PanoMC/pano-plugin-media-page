@@ -1,0 +1,45 @@
+{
+  "controllers": {},
+  "format": 1,
+  "views": {
+    "media-page:GalleryPage": {
+      "classes": [
+        "media-page-gallery-page",
+        "media-page-gallery-page__badge",
+        "media-page-gallery-page__details-inner",
+        "media-page-gallery-page__grid",
+        "media-page-gallery-page__header",
+        "media-page-gallery-page__image",
+        "media-page-gallery-page__item",
+        "media-page-gallery-page__item-inner",
+        "media-page-gallery-page__item-title",
+        "media-page-gallery-page__lightbox",
+        "media-page-gallery-page__lightbox-close",
+        "media-page-gallery-page__lightbox-details",
+        "media-page-gallery-page__lightbox-main",
+        "media-page-gallery-page__lightbox-media",
+        "media-page-gallery-page__lightbox-nav",
+        "media-page-gallery-page__media-container",
+        "media-page-gallery-page__media-wrapper",
+        "media-page-gallery-page__nav-next",
+        "media-page-gallery-page__nav-prev",
+        "media-page-gallery-page__overlay",
+        "media-page-gallery-page__overlay-content",
+        "media-page-gallery-page__play-icon",
+        "media-page-gallery-page__section",
+        "media-page-gallery-page__title",
+        "media-page-gallery-page__title-2",
+        "media-page-gallery-page__video-thumb",
+        "media-page-gallery-page__zoom-icon"
+      ],
+      "contract": 1,
+      "hooks": [],
+      "props": {
+        "data": {
+          "required": true
+        }
+      },
+      "slots": []
+    }
+  }
+}

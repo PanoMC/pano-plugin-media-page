@@ -1,7 +1,7 @@
 import { PanoPlugin, viewComponent } from '@panomc/sdk';
 import { derived } from 'svelte/store';
 import { _ as i18n } from '@panomc/sdk/utils/language';
-import ApiUtil from '@panomc/sdk/utils/api';
+import { api } from '@panomc/sdk/plugin-api';
 import { showToast } from '@panomc/sdk/toasts';
 
 export const pluginId = 'pano-plugin-media-page';
@@ -76,19 +76,17 @@ export default class MediaPagePlugin extends PanoPlugin {
       });
     } else {
       // Theme Side
-      const galleryPageComponent = viewComponent(() => import('./theme/pages/GalleryPage.svelte'));
-
       pano.ui.app.onLoad(async (data, event) => {
         try {
-          const res = await ApiUtil.get({ path: '/api/media-pages', request: event });
-          if (res && res.mediaPages) {
-            const pages = res.mediaPages;
+          const res = await api.get({ path: '/media-pages', request: event });
+          if (res && res.items) {
+            const pages = res.items;
 
             pages.forEach((mediaPage) => {
               // Register dynamic route for each media page
               pano.ui.page.register({
                 path: `/gallery/${mediaPage.slug}`,
-                component: galleryPageComponent,
+                view: 'media-page:GalleryPage',
               });
 
               // If registered to theme navigation

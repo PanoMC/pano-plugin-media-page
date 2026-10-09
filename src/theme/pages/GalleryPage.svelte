@@ -1,8 +1,8 @@
 {#if data.categories && data.categories.length > 0}
   {#each data.categories as cat (cat.category.id)}
-    <section class="category-section">
-      <div class="category-header">
-        <h2 class="h4">{cat.category.title}</h2>
+    <section class="media-page-gallery-page media-page-gallery-page__section">
+      <div class="media-page-gallery-page__header">
+        <h2 class="media-page-gallery-page__title h4">{cat.category.title}</h2>
         {#if cat.category.description}
           <p class="opacity-75 small mb-0">{cat.category.description}</p>
         {/if}
@@ -10,37 +10,37 @@
       </div>
 
       {#if cat.items && cat.items.length > 0}
-        <div class="gallery-grid">
+        <div class="media-page-gallery-page__grid">
           {#each cat.items as item (item.id)}
-            <div class="gallery-item" on:click={() => openLightbox(item)} on:keydown={(e) => { if (e.key === 'Enter') openLightbox(item); }} role="button" tabindex="0">
-              <div class="item-inner">
+            <div class="media-page-gallery-page__item" on:click={() => openLightbox(item)} on:keydown={(e) => { if (e.key === 'Enter') openLightbox(item); }} role="button" tabindex="0">
+              <div class="media-page-gallery-page__item-inner">
                 {#if item.type === 'IMAGE'}
                   <img
-                    src="/api/media/file/{item.thumbnailPath || item.filePath}"
+                    src="/api/plugins/pano-plugin-media-page/media/file/{item.thumbnailPath || item.filePath}"
                     alt={item.title}
                     loading="lazy"
-                    class="gallery-img" />
+                    class="media-page-gallery-page__image" />
                 {:else}
-                  <div class="gallery-video-thumb">
+                  <div class="media-page-gallery-page__video-thumb">
                     {#if item.thumbnailPath}
-                      <img src="/api/media/file/{item.thumbnailPath}" alt={item.title} loading="lazy" class="gallery-img" />
+                      <img src="/api/plugins/pano-plugin-media-page/media/file/{item.thumbnailPath}" alt={item.title} loading="lazy" class="media-page-gallery-page__image" />
                     {:else}
-                      <video src="/api/media/file/{item.filePath}#t=0.1" preload="metadata" muted></video>
+                      <video src="/api/plugins/pano-plugin-media-page/media/file/{item.filePath}#t=0.1" preload="metadata" muted></video>
                     {/if}
-                    <div class="play-icon">
+                    <div class="media-page-gallery-page__play-icon">
                       <i class="fas fa-play"></i>
                     </div>
-                    <span class="badge bg-blur position-absolute bottom-0 end-0 m-2">
+                    <span class="media-page-gallery-page__badge badge position-absolute bottom-0 end-0 m-2">
                       <i class="fas fa-video me-1"></i>Video
                     </span>
                   </div>
                 {/if}
-                <div class="gallery-overlay">
-                  <div class="overlay-content">
+                <div class="media-page-gallery-page__overlay">
+                  <div class="media-page-gallery-page__overlay-content">
                     {#if item.title}
-                      <span class="gallery-title d-block">{item.title}</span>
+                      <span class="media-page-gallery-page__item-title d-block">{item.title}</span>
                     {/if}
-                    <div class="zoom-icon mt-2">
+                    <div class="media-page-gallery-page__zoom-icon mt-2">
                       <i class="fas fa-search-plus"></i>
                     </div>
                   </div>
@@ -57,34 +57,34 @@
     </section>
   {/each}
 {:else}
-  <div class="py-5">
+  <div class="media-page-gallery-page py-5">
     <NoContent />
   </div>
 {/if}
 
 <!-- Lightbox -->
 {#if lightboxItem}
-  <div class="lightbox-backdrop" on:click={closeLightbox} transition:fade={{ duration: 200 }}>
-    <button type="button" class="lightbox-nav nav-prev" on:click|stopPropagation={prevMedia} aria-label="Previous">
+  <div class="media-page-gallery-page media-page-gallery-page__lightbox" on:click={closeLightbox} transition:fade={{ duration: 200 }}>
+    <button type="button" class="media-page-gallery-page__lightbox-nav media-page-gallery-page__nav-prev" on:click|stopPropagation={prevMedia} aria-label="Previous">
       <i class="fas fa-chevron-left"></i>
     </button>
     
-    <button type="button" class="lightbox-nav nav-next" on:click|stopPropagation={nextMedia} aria-label="Next">
+    <button type="button" class="media-page-gallery-page__lightbox-nav media-page-gallery-page__nav-next" on:click|stopPropagation={nextMedia} aria-label="Next">
       <i class="fas fa-chevron-right"></i>
     </button>
 
-    <button type="button" class="lightbox-close-btn" on:click={closeLightbox} aria-label="Close">
+    <button type="button" class="media-page-gallery-page__lightbox-close" on:click={closeLightbox} aria-label="Close">
       <i class="fas fa-times"></i>
     </button>
 
-    <div class="lightbox-main" on:click|stopPropagation role="dialog">
-      <div class="media-container">
+    <div class="media-page-gallery-page__lightbox-main" on:click|stopPropagation role="dialog">
+      <div class="media-page-gallery-page__media-container">
         {#key lightboxItem.id}
-          <div in:fade={{ duration: 250, delay: 50 }} out:fade={{ duration: 150 }} class="media-wrapper">
+          <div in:fade={{ duration: 250, delay: 50 }} out:fade={{ duration: 150 }} class="media-page-gallery-page__media-wrapper">
             {#if lightboxItem.type === 'IMAGE'}
-              <img src="/api/media/file/{lightboxItem.filePath}" alt={lightboxItem.title} class="lightbox-media" />
+              <img src="/api/plugins/pano-plugin-media-page/media/file/{lightboxItem.filePath}" alt={lightboxItem.title} class="media-page-gallery-page__lightbox-media" />
             {:else}
-              <video src="/api/media/file/{lightboxItem.filePath}" controls autoplay class="lightbox-media">
+              <video src="/api/plugins/pano-plugin-media-page/media/file/{lightboxItem.filePath}" controls autoplay class="media-page-gallery-page__lightbox-media">
                 <track kind="captions" />
               </video>
             {/if}
@@ -93,10 +93,10 @@
       </div>
 
       {#if lightboxItem.title || lightboxItem.description}
-        <div class="lightbox-details">
-          <div class="details-inner">
+        <div class="media-page-gallery-page__lightbox-details">
+          <div class="media-page-gallery-page__details-inner">
             {#if lightboxItem.title}
-              <h4 class="mb-1 fw-bold">{lightboxItem.title}</h4>
+              <h4 class="media-page-gallery-page__title-2 mb-1 fw-bold">{lightboxItem.title}</h4>
             {/if}
             {#if lightboxItem.description}
               <p class="mb-0 opacity-75">{lightboxItem.description}</p>
@@ -111,31 +111,32 @@
 <svelte:window on:keydown={handleKeyDown} />
 
 <style>
-
-  .gallery-grid {
+  /* Kept rules: every rule draws the gallery the plugin ships (grid, tiles, play icon, overlay, lightbox and its zoom-in
+     animation); no selector reaches Bootstrap or theme markup. */
+  .media-page-gallery-page__grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1.25rem;
   }
 
-  .gallery-item {
+  .media-page-gallery-page__item {
     cursor: pointer;
     border-radius: 12px;
     overflow: hidden;
     background: #000;
   }
 
-  .item-inner {
+  .media-page-gallery-page__item-inner {
     position: relative;
     aspect-ratio: 16/10;
     transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
   }
 
-  .gallery-item:hover .item-inner {
+  .media-page-gallery-page__item:hover .media-page-gallery-page__item-inner {
     transform: scale(1.05);
   }
 
-  .gallery-img {
+  .media-page-gallery-page__image {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -143,12 +144,12 @@
     transition: filter 0.3s ease;
   }
 
-  .gallery-item:hover .gallery-img,
-  .gallery-item:hover .gallery-video-thumb video {
+  .media-page-gallery-page__item:hover .media-page-gallery-page__image,
+  .media-page-gallery-page__item:hover .media-page-gallery-page__video-thumb video {
     filter: brightness(0.6);
   }
 
-  .gallery-video-thumb {
+  .media-page-gallery-page__video-thumb {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -160,14 +161,14 @@
     overflow: hidden;
   }
 
-  .gallery-video-thumb video {
+  .media-page-gallery-page__video-thumb video {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: filter 0.3s ease;
   }
 
-  .play-icon {
+  .media-page-gallery-page__play-icon {
     width: 60px;
     height: 60px;
     background: rgba(255, 255, 255, 0.1);
@@ -181,18 +182,18 @@
     transition: transform 0.3s ease, background 0.3s ease;
   }
 
-  .gallery-item:hover .play-icon {
+  .media-page-gallery-page__item:hover .media-page-gallery-page__play-icon {
     transform: scale(1.1);
-    background: var(--bs-primary, #0d6efd);
+    background: var(--pano-color-primary, #0d6efd);
   }
 
-  .bg-blur {
+  .media-page-gallery-page__badge {
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  .gallery-overlay {
+  .media-page-gallery-page__overlay {
     position: absolute;
     inset: 0;
     display: flex;
@@ -205,24 +206,24 @@
     padding: 1.5rem;
   }
 
-  .gallery-item:hover .gallery-overlay {
+  .media-page-gallery-page__item:hover .media-page-gallery-page__overlay {
     opacity: 1;
   }
 
-  .gallery-title {
+  .media-page-gallery-page__item-title {
     color: #fff;
     font-weight: 600;
     font-size: 1.1rem;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   }
 
-  .zoom-icon {
+  .media-page-gallery-page__zoom-icon {
     color: rgba(255, 255, 255, 0.8);
     font-size: 1.25rem;
   }
 
   /* Lightbox */
-  .lightbox-backdrop {
+  .media-page-gallery-page__lightbox {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.95);
@@ -234,7 +235,7 @@
     cursor: zoom-out;
   }
 
-  .lightbox-nav {
+  .media-page-gallery-page__lightbox-nav {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -253,15 +254,15 @@
     z-index: 10;
   }
 
-  .lightbox-nav:hover {
+  .media-page-gallery-page__lightbox-nav:hover {
     background: rgba(255, 255, 255, 0.2);
     transform: translateY(-50%) scale(1.1);
   }
 
-  .nav-prev { left: 2rem; }
-  .nav-next { right: 2rem; }
+  .media-page-gallery-page__nav-prev { left: 2rem; }
+  .media-page-gallery-page__nav-next { right: 2rem; }
 
-  .lightbox-close-btn {
+  .media-page-gallery-page__lightbox-close {
     position: absolute;
     top: 2rem;
     right: 2rem;
@@ -275,25 +276,25 @@
     z-index: 10;
   }
 
-  .lightbox-close-btn:hover {
+  .media-page-gallery-page__lightbox-close:hover {
     opacity: 1;
   }
 
-  .lightbox-main {
+  .media-page-gallery-page__lightbox-main {
     max-width: 90vw;
     max-height: 90vh;
     display: flex;
     flex-direction: column;
     cursor: default;
-    animation: zoomIn 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    animation: media-page-zoom-in 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
   }
 
-  @keyframes zoomIn {
+  @keyframes media-page-zoom-in {
     from { opacity: 0; transform: scale(0.95); }
     to { opacity: 1; transform: scale(1); }
   }
 
-  .media-container {
+  .media-page-gallery-page__media-container {
     flex: 1;
     display: flex;
     align-items: center;
@@ -303,7 +304,7 @@
     min-height: 200px;
   }
 
-  .media-wrapper {
+  .media-page-gallery-page__media-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -311,7 +312,7 @@
     height: 100%;
   }
 
-  .lightbox-media {
+  .media-page-gallery-page__lightbox-media {
     max-width: 100%;
     max-height: 80vh;
     object-fit: contain;
@@ -319,13 +320,13 @@
     border-radius: 4px;
   }
 
-  .lightbox-details {
+  .media-page-gallery-page__lightbox-details {
     margin-top: 1.5rem;
     color: #fff;
     text-align: center;
   }
 
-  .details-inner {
+  .media-page-gallery-page__details-inner {
     display: inline-block;
     padding: 1rem 2rem;
     background: rgba(255, 255, 255, 0.05);
@@ -335,14 +336,14 @@
   }
 
   @media (max-width: 768px) {
-    .lightbox-nav {
+    .media-page-gallery-page__lightbox-nav {
       width: 44px;
       height: 44px;
       font-size: 1rem;
     }
-    .nav-prev { left: 1rem; }
-    .nav-next { right: 1rem; }
-    .details-inner {
+    .media-page-gallery-page__nav-prev { left: 1rem; }
+    .media-page-gallery-page__nav-next { right: 1rem; }
+    .media-page-gallery-page__details-inner {
       border-radius: 12px;
       padding: 1rem;
     }
@@ -350,7 +351,7 @@
 </style>
 
 <script context="module">
-    import ApiUtil from '@panomc/sdk/utils/api';
+    import { api } from '@panomc/sdk/plugin-api';
     import {error} from '@panomc/sdk/svelte';
 
     export async function load(event) {
@@ -360,8 +361,8 @@
     const pathParts = url.pathname.split('/');
     const slug = pathParts[pathParts.length - 1];
 
-    const res = await ApiUtil.get({
-      path: `/api/media-pages/${slug}`,
+    const res = await api.get({
+      path: `/media-pages/${slug}`,
       request: event,
     });
 

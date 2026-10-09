@@ -10,8 +10,8 @@ import com.panomc.plugins.mediapage.db.model.MediaItem
 import com.panomc.plugins.mediapage.permission.ManageMediaPagePermission
 import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.validation.ValidationHandler
-import io.vertx.ext.web.validation.builder.Bodies
-import io.vertx.ext.web.validation.builder.ValidationHandlerBuilder
+import com.panomc.platform.schema.dsl.Bodies
+import com.panomc.platform.schema.dsl.ValidationHandlerBuilder
 import io.vertx.json.schema.SchemaRepository
 import io.vertx.json.schema.common.dsl.Schemas.arraySchema
 import io.vertx.json.schema.common.dsl.Schemas.numberSchema
@@ -22,7 +22,7 @@ class PanelReorderMediaAPI(
     private val plugin: MediaPagePlugin,
     private val mediaItemDao: MediaItemDao
 ) : PanelApi() {
-    override val paths = listOf(Path("/api/panel/media-items/reorder", RouteType.PUT))
+    override val paths = listOf(Path("/media-items/reorder", RouteType.PUT))
 
     private val authProvider: AuthProvider by lazy {
         plugin.applicationContext.getBean(AuthProvider::class.java)
