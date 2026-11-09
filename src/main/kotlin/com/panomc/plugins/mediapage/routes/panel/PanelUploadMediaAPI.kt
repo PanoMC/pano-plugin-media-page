@@ -6,6 +6,7 @@ import com.panomc.platform.db.DatabaseManager
 import com.panomc.platform.error.NotFound
 import com.panomc.platform.model.*
 import com.panomc.plugins.mediapage.MediaPagePlugin
+import com.panomc.plugins.mediapage.util.ImageDecoding
 import com.panomc.plugins.mediapage.util.MediaSniffer
 import com.panomc.plugins.mediapage.db.dao.MediaCategoryDao
 import com.panomc.plugins.mediapage.db.dao.MediaItemDao
@@ -72,6 +73,25 @@ class PanelUploadMediaAPI(
         // The type of every file comes from its content; one file that is not an image or video refuses the upload.
         val detectedTypes = uploads.map { MediaSniffer.detect(File(it.uploadedFileName())) ?: throw com.panomc.platform.error.BadRequest() }
 
+        // Image sizes come from the header; an image too big to decode safely refuses the upload.
+        val dimensions = uploads.mapIndexed { index, upload ->
+            if (detectedTypes[index].type != "IMAGE") {
+                return@mapIndexed null
+            }
+
+            val size = try {
+                ImageDecoding.readDimensions(File(upload.uploadedFileName()))
+            } catch (_: Exception) {
+                null
+            }
+
+            if (size != null && ImageDecoding.isTooLarge(size.first, size.second)) {
+                throw com.panomc.platform.error.BadRequest()
+            }
+
+            size
+        }
+
         val uploadedItems = mutableListOf<Map<String, Any>>()
 
         for ((index, upload) in uploads.withIndex()) {
@@ -100,16 +120,19 @@ class PanelUploadMediaAPI(
             var width = 0
             var height = 0
 
-            if (type == "IMAGE") {
-                try {
-                    val image: BufferedImage? = ImageIO.read(destFile)
-                    if (image != null) {
-                        width = image.width
-                        height = image.height
+            val size = dimensions[index]
 
+            if (type == "IMAGE" && size != null) {
+                try {
+                    width = size.first
+                    height = size.second
+
+                    // Decoded with subsampling, so only about the thumbnail's pixels are held in memory.
+                    val image: BufferedImage? = ImageDecoding.readSubsampled(destFile, 400)
+                    if (image != null) {
                         // Generate thumbnail
                         val thumbWidth = 400
-                        val thumbHeight = (thumbWidth.toDouble() / image.width * image.height).toInt()
+                        val thumbHeight = (thumbWidth.toDouble() / image.width * image.height).toInt().coerceAtLeast(1)
 
                         val thumbImage = BufferedImage(thumbWidth, thumbHeight, BufferedImage.TYPE_INT_RGB)
                         val g = thumbImage.createGraphics()
@@ -118,7 +141,8 @@ class PanelUploadMediaAPI(
 
                         val thumbName = "thumb_$uniqueName"
                         val thumbFile = File(plugin.thumbnailsDir, thumbName)
-                        ImageIO.write(thumbImage, extension.ifEmpty { "jpg" }, thumbFile)
+                        // ImageIO has no WebP writer; a WebP thumbnail is stored as JPEG bytes.
+                        ImageIO.write(thumbImage, if (extension == "webp") "jpg" else extension, thumbFile)
 
                         thumbnailFileName = thumbName
                     }
