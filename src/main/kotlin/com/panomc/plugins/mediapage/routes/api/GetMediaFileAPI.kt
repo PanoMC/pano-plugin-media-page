@@ -30,6 +30,8 @@ class GetMediaFileAPI(
 
     companion object {
         private const val CACHE_TTL_SECONDS = 7 * 24 * 60 * 60 // 1 week
+
+        private val SAFE_FILE_NAME = Regex("^[A-Za-z0-9._-]+$")
     }
 
     override fun getValidationHandler(schemaRepository: SchemaRepository): ValidationHandler =
@@ -41,22 +43,21 @@ class GetMediaFileAPI(
         val parameters = getParameters(context)
         val fileName = parameters.pathParameter("fileName").string
 
-        // Check uploads dir first, then thumbnails dir
-        var file = File(plugin.uploadsDir, fileName)
-
-        if (!file.exists()) {
-            file = File(plugin.thumbnailsDir, fileName)
-        }
-
-        if (!file.exists()) {
+        // Security: only a plain file name directly inside the uploads or thumbnails dir, checked before the disk is
+        // touched, and every miss answers the same 404 so nothing can be learned about other paths on the server.
+        if (!SAFE_FILE_NAME.matches(fileName) || fileName.contains("..")) {
             context.response().setStatusCode(404).end()
             return null
         }
 
-        // Security: prevent path traversal
-        if (!file.canonicalPath.startsWith(plugin.uploadsDir.canonicalPath) &&
-            !file.canonicalPath.startsWith(plugin.thumbnailsDir.canonicalPath)) {
-            context.response().setStatusCode(403).end()
+        // Check uploads dir first, then thumbnails dir
+        val file = listOf(plugin.uploadsDir.canonicalFile, plugin.thumbnailsDir.canonicalFile)
+            .map { dir -> dir to File(dir, fileName) }
+            .firstOrNull { (dir, candidate) -> candidate.canonicalFile.parentFile == dir && candidate.isFile }
+            ?.second
+
+        if (file == null) {
+            context.response().setStatusCode(404).end()
             return null
         }
 
