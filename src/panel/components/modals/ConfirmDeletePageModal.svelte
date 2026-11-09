@@ -6,7 +6,7 @@
         <div class="pb-3">
           <i class="fas fa-question-circle fa-3x d-block m-auto text-gray"></i>
         </div>
-        {@html $_('modals.delete-page.description', { values: { title: $page.title } })}
+        {@html $_('modals.delete-page.description', { values: { title: escapeHtml($page.title) } })}
       </div>
       <div class="modal-footer flex-nowrap">
         <button
@@ -59,6 +59,7 @@
 
 <script>
   import { _, pluginId, showSuccessToast, showErrorToast } from '../../../main';
+  import { escapeHtml } from '../../escapeHtml.js';
   let loading = false;
 
   async function onYesClick() {

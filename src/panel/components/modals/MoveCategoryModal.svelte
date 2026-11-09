@@ -15,7 +15,7 @@
       <div class="modal-body text-first-capitalize">
         <p>
           {@html $_('modals.move-category.description', {
-            values: { title: `<span class="badge text-bg-gray">${$category.title}</span>` },
+            values: { title: `<span class="badge text-bg-gray">${escapeHtml($category.title)}</span>` },
           })}
         </p>
         {#if loading}
@@ -85,6 +85,7 @@
 <script>
   import { onMount } from 'svelte';
   import { _, pluginId, showSuccessToast, showErrorToast } from '../../../main';
+  import { escapeHtml } from '../../escapeHtml.js';
 
   let loading = false;
   let moving = false;

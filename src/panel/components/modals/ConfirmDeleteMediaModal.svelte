@@ -6,7 +6,7 @@
         <div class="pb-3">
           <i class="fas fa-question-circle fa-3x d-block m-auto text-gray"></i>
         </div>
-        {@html $_('modals.delete-media.description', { values: { title: $item.title } })}
+        {@html $_('modals.delete-media.description', { values: { title: escapeHtml($item.title) } })}
       </div>
       <div class="modal-footer flex-nowrap">
         <button class="btn btn-link col-6 m-0" type="button" class:disabled={loading} on:click={hide}>
@@ -49,6 +49,7 @@
 
 <script>
   import { _, pluginId, showSuccessToast, showErrorToast } from '../../../main';
+  import { escapeHtml } from '../../escapeHtml.js';
   let loading = false;
 
   async function onYesClick() {
