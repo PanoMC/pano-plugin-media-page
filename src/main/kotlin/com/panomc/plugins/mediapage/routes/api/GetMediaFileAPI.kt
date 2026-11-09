@@ -2,7 +2,7 @@ package com.panomc.plugins.mediapage.routes.api
 
 import com.panomc.platform.annotation.Endpoint
 import com.panomc.platform.model.*
-import com.panomc.platform.util.MimeTypeUtil
+import com.panomc.plugins.mediapage.util.MediaSniffer
 import com.panomc.plugins.mediapage.MediaPagePlugin
 import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.validation.ValidationHandler
@@ -60,10 +60,19 @@ class GetMediaFileAPI(
             return null
         }
 
-        val mimeType = MimeTypeUtil.getMimeTypeFromFileName(file.absolutePath)
+        val mimeType = MediaSniffer.mimeTypeOf(file.extension)
 
         val response = context.response()
-        response.putHeader("Content-Type", mimeType)
+        // Only image and video types are served inline; anything else (files from before uploads were checked) is a
+        // download that the browser never renders.
+        if (mimeType != null) {
+            response.putHeader("Content-Type", mimeType)
+        } else {
+            response.putHeader("Content-Type", "application/octet-stream")
+            response.putHeader("Content-Disposition", "attachment")
+        }
+        response.putHeader("X-Content-Type-Options", "nosniff")
+        response.putHeader("Content-Security-Policy", "default-src 'none'; sandbox")
         response.putHeader("Cache-Control", "public, max-age=$CACHE_TTL_SECONDS, immutable")
 
         try {

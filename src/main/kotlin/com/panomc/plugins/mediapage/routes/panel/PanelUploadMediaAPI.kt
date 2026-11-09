@@ -6,6 +6,7 @@ import com.panomc.platform.db.DatabaseManager
 import com.panomc.platform.error.NotFound
 import com.panomc.platform.model.*
 import com.panomc.plugins.mediapage.MediaPagePlugin
+import com.panomc.plugins.mediapage.util.MediaSniffer
 import com.panomc.plugins.mediapage.db.dao.MediaCategoryDao
 import com.panomc.plugins.mediapage.db.dao.MediaItemDao
 import com.panomc.plugins.mediapage.db.model.MediaItem
@@ -68,23 +69,23 @@ class PanelUploadMediaAPI(
         val formTitle = context.request().getFormAttribute("title")?.takeIf { it.isNotBlank() }
         val formDescription = context.request().getFormAttribute("description")?.takeIf { it.isNotBlank() }
 
+        // The type of every file comes from its content; one file that is not an image or video refuses the upload.
+        val detectedTypes = uploads.map { MediaSniffer.detect(File(it.uploadedFileName())) ?: throw com.panomc.platform.error.BadRequest() }
+
         val uploadedItems = mutableListOf<Map<String, Any>>()
 
-        for (upload in uploads) {
+        for ((index, upload) in uploads.withIndex()) {
+            val detected = detectedTypes[index]
             val originalFileName = upload.fileName()
-            val mimeType = upload.contentType()
+            val mimeType = detected.mimeType
             val fileSize = upload.size()
             val uploadedFile = File(upload.uploadedFileName())
 
             // Determine media type
-            val type = when {
-                mimeType.startsWith("image/") -> "IMAGE"
-                mimeType.startsWith("video/") -> "VIDEO"
-                else -> "IMAGE"
-            }
+            val type = detected.type
 
             // Generate unique filename
-            val extension = originalFileName.substringAfterLast('.', "")
+            val extension = detected.extension
             val uniqueName = "${UUID.randomUUID()}.$extension"
 
             // Save to plugin data folder
