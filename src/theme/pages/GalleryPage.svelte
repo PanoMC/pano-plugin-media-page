@@ -108,8 +108,6 @@
   </div>
 {/if}
 
-<svelte:window on:keydown={handleKeyDown} />
-
 <style>
   /* Kept rules: every rule draws the gallery the plugin ships (grid, tiles, play icon, overlay, lightbox and its zoom-in
      animation); no selector reaches Bootstrap or theme markup. */
@@ -383,6 +381,7 @@
 </script>
 
 <script>
+  import { onMount } from 'svelte';
   import { NoContent } from '@panomc/sdk/components/theme';
   import { fade } from 'svelte/transition';
 
@@ -416,6 +415,13 @@
     const prevIndex = (currentIndex - 1 + allItems.length) % allItems.length;
     lightboxItem = allItems[prevIndex];
   }
+
+  // Not <svelte:window>: it compiles to the runtime's `window` export, which the theme's shared
+  // runtime shim reads before Svelte sets it, so the whole page failed to mount.
+  onMount(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  });
 
   function handleKeyDown(event) {
     if (!lightboxItem) return;
