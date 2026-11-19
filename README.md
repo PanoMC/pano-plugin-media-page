@@ -13,7 +13,8 @@
 
 Media Page lets you create gallery pages on your website for screenshots, builds and videos. Group your media into categories, add titles and descriptions, and players can browse everything in a clean grid with a full-screen viewer.
 
-## ✨ Features
+<h3 align="center">Features</h3>
+
 - 🖼️ **Gallery pages**: Create as many gallery pages as you like, each with its own link.
 - 🗂️ **Categories**: Group your media into sections like builds, events or videos.
 - 🎬 **Images and videos**: Upload pictures and video clips side by side.
@@ -22,20 +23,24 @@ Media Page lets you create gallery pages on your website for screenshots, builds
 - 👁️ **Show or hide**: Hide a category or a whole page until it is ready.
 - 🧭 **Menu link**: Add a gallery to your website's menu with one switch.
 
-## 📸 Screenshots
+<h3 align="center">Screenshots</h3>
+
 <p align="center"><img src=".github/assets/lightbox.png" alt="Players click any item to view it full screen and flip through the gallery." width="900" /></p>
 <p align="center"><i>Players click any item to view it full screen and flip through the gallery.</i></p>
 
 <p align="center"><img src=".github/assets/panel.png" alt="Manage pages, categories and uploads from the panel." width="900" /></p>
 <p align="center"><i>Manage pages, categories and uploads from the panel.</i></p>
 
-## 🚀 Get started
+<h3 align="center">Get started</h3>
+
 1. Open your Pano panel and go to **Addons**.
 2. Find **Media Page** and click **Install**.
 3. Open **Media** in the panel menu, click **Create Page**, add categories and upload your media.
 
-## 💬 Support
+<h3 align="center">Support</h3>
+
 Questions or ideas? Join our [Discord](https://panomc.com/discord) or visit [panomc.com](https://panomc.com).
 
-## 📄 License
+<h3 align="center">License</h3>
+
 Released under the MIT License.
