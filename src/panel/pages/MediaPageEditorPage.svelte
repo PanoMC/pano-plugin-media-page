@@ -195,7 +195,7 @@
                 if (e.key === 'ArrowDown' && catIndex < categories.length - 1)
                   swapCategories(catIndex, catIndex + 1);
               }}
-              aria-label="Drag to reorder">
+              aria-label={$_('media-pages.editor.drag-category')}>
               <i class="fas fa-grip-vertical text-muted"></i>
             </div>
             <i class="fas fa-layer-group text-muted"></i>
@@ -289,7 +289,7 @@
                   on:dragend={onMediaDragEnd}
                   role="button"
                   tabindex="0"
-                  aria-label="Drag to reorder media"
+                  aria-label={$_('media-pages.editor.drag-media')}
                   on:keydown={(e) => {}}>
                   <div class="media-preview">
                     {#if item.type === 'IMAGE'}
@@ -314,7 +314,7 @@
                           <i class="fas fa-play-circle fa-2x"></i>
                         </div>
                         <span class="badge bg-dark position-absolute bottom-0 end-0 m-1">
-                          <i class="fas fa-video me-1"></i>Video
+                          <i class="fas fa-video me-1"></i>{$_('media-pages.editor.video')}
                         </span>
                       </div>
                     {/if}
@@ -408,7 +408,7 @@
   import { flip } from 'svelte/animate';
   import { base, goto } from '@panomc/sdk/svelte';
   import { PageActions, NoContent } from '@panomc/sdk/components/panel';
-  import { _, showSuccessToast, showErrorToast } from '../../main';
+  import { _, showSuccessToast, showErrorToast, translateError, generalError } from '../../main';
 
   import AddCategoryModal, {
     show as showAddCategoryModal,
@@ -509,8 +509,7 @@
         });
 
         if (result.error) {
-          const errorKey = `plugins.${pluginId}.errors.${result.error.code}`;
-          const translatedError = $_(errorKey) !== errorKey ? $_(errorKey) : result.error.message || result.error.code;
+          const translatedError = translateError(result.error);
           showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: translatedError });
         } else {
           showSuccessToast(`plugins.${pluginId}.toasts.page-updated`);
@@ -532,8 +531,7 @@
         });
 
         if (result.error) {
-          const errorKey = `plugins.${pluginId}.errors.${result.error.code}`;
-          const translatedError = $_(errorKey) !== errorKey ? $_(errorKey) : result.error.message || result.error.code;
+          const translatedError = translateError(result.error);
           showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: translatedError });
         } else {
           showSuccessToast(`plugins.${pluginId}.toasts.page-added`);
@@ -544,7 +542,7 @@
     } catch (e) {
       console.error(e);
       showErrorToast(`plugins.${pluginId}.toasts.error-saving`, {
-        error: $_(`plugins.${pluginId}.errors.ERROR_GENERAL`),
+        error: generalError(),
       });
     } finally {
       saving = false;
@@ -606,8 +604,7 @@
         );
         showSuccessToast(`plugins.${pluginId}.toasts.category-updated`);
       } else if (result?.error) {
-        const errorKey = `plugins.${pluginId}.errors.${result.error.code}`;
-        const translatedError = $_(errorKey) !== errorKey ? $_(errorKey) : result.error.message || result.error.code;
+        const translatedError = translateError(result.error);
         showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: translatedError });
       }
     } catch (e) {
@@ -691,8 +688,7 @@
       if (result && !result.error) {
         showSuccessToast(`plugins.${pluginId}.toasts.category-updated`);
       } else if (result?.error) {
-        const errorKey = `plugins.${pluginId}.errors.${result.error.code}`;
-        const translatedError = $_(errorKey) !== errorKey ? $_(errorKey) : result.error.message || result.error.code;
+        const translatedError = translateError(result.error);
         showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: translatedError });
       }
     } catch (e) {
@@ -836,8 +832,7 @@
       if (result && !result.error) {
         showSuccessToast(`plugins.${pluginId}.toasts.media-updated`);
       } else if (result?.error) {
-        const errorKey = `plugins.${pluginId}.errors.${result.error.code}`;
-        const translatedError = $_(errorKey) !== errorKey ? $_(errorKey) : result.error.message || result.error.code;
+        const translatedError = translateError(result.error);
         showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: translatedError });
       }
     } catch (e) {

@@ -16,12 +16,12 @@
   "media-pages": {
     "list": {
       "title": "Media Pages",
-      "total-count": "{count} Media Pages",
+      "total-count": "{count, plural, one {# media page} other {# media pages}}",
       "add-page": "Create Page",
       "table": {
         "id": "ID",
         "title": "Title",
-        "slug": "Slug",
+        "slug": "URL Slug",
         "status": "Status",
         "actions": "Actions",
         "actions-edit": "Edit",
@@ -37,6 +37,9 @@
       "edit-title": "Edit Media Page",
       "back": "Media Pages",
       "save": "Save",
+      "drag-category": "Drag to reorder",
+      "drag-media": "Drag to reorder media",
+      "video": "Video",
       "fields": {
         "title": "Page Title",
         "slug": "URL Slug",
@@ -74,6 +77,7 @@
     "ERROR_GENERAL": "An unexpected error occurred. Please try again later."
   },
   "modals": {
+    "close": "Close",
     "delete-page": {
       "description": "Are you sure you want to delete media page <b>{title}</b>? All categories and media items in this page will also be deleted. This action cannot be undone.",
       "confirm": "Delete",
@@ -126,7 +130,7 @@
       },
       "drop-label": "Drag & drop files here or click to browse",
       "drop-hint": "Supports images and videos (max 100MB)",
-      "selected-count": "{count} file(s) selected",
+      "selected-count": "{count, plural, one {# file selected} other {# files selected}}",
       "clear": "Clear all",
       "upload": "Upload",
       "cancel": "Cancel"
@@ -154,5 +158,11 @@
     "error-saving": "Error while saving: {error}",
     "error-deleting": "Error while deleting: {error}",
     "error-uploading": "Error while uploading: {error}"
+  },
+  "gallery": {
+    "video": "Video",
+    "previous": "Previous",
+    "next": "Next",
+    "close": "Close"
   }
 }

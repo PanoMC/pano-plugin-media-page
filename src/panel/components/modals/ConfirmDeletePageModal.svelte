@@ -58,7 +58,7 @@
 </script>
 
 <script>
-  import { _, pluginId, showSuccessToast, showErrorToast } from '../../../main';
+  import { _, pluginId, showSuccessToast, showErrorToast, translateError, generalError } from '../../../main';
   import { escapeHtml } from '../../escapeHtml.js';
   let loading = false;
 
@@ -71,8 +71,7 @@
       });
 
       if (result.error) {
-        const errorKey = `plugins.${pluginId}.errors.${result.error.code}`;
-        const translatedError = $_(errorKey) !== errorKey ? $_(errorKey) : result.error.message || result.error.code;
+        const translatedError = translateError(result.error);
         showErrorToast(`plugins.${pluginId}.toasts.error-deleting`, { error: translatedError });
       } else {
         showSuccessToast(`plugins.${pluginId}.toasts.page-deleted`);
@@ -82,7 +81,7 @@
     } catch (e) {
       console.error(e);
       showErrorToast(`plugins.${pluginId}.toasts.error-deleting`, {
-        error: $_(`plugins.${pluginId}.errors.ERROR_GENERAL`),
+        error: generalError(),
       });
     } finally {
       loading = false;

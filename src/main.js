@@ -1,6 +1,6 @@
 import { PanoPlugin, viewComponent } from '@panomc/sdk';
-import { derived } from 'svelte/store';
-import { _ as i18n } from '@panomc/sdk/utils/language';
+import { derived, get } from 'svelte/store';
+import { _ as i18n, currentLanguage } from '@panomc/sdk/utils/language';
 import { api } from '@panomc/sdk/plugin-api';
 import { showToast } from '@panomc/sdk/toasts';
 
@@ -10,6 +10,42 @@ export const pluginId = 'pano-plugin-media-page';
 export const _ = derived(i18n, ($_fn) => {
   return (key, options) => $_fn(`plugins.${pluginId}.${key}`, options);
 });
+
+// Turns a server error ({ code }) into this plugin's translated errors.<code> text. Unknown
+// codes fall back to errors.ERROR_UNKNOWN, never to the server's English message.
+export function translateError(error) {
+  const t = get(_);
+  const code = error?.code;
+  if (!code) return t('errors.ERROR_UNKNOWN');
+  const key = `errors.${code}`;
+  const text = t(key);
+  return text && text !== `plugins.${pluginId}.${key}` ? text : t('errors.ERROR_UNKNOWN');
+}
+
+// Text for unexpected failures (network errors, exceptions).
+export function generalError() {
+  return get(_)('errors.ERROR_GENERAL');
+}
+
+const FILE_SIZE_UNITS = ['byte', 'kilobyte', 'megabyte', 'gigabyte'];
+
+// Formats a byte count with the panel language's decimal separator and unit names
+// (e.g. "1.5 MB" in English, "1,5 MB" in Turkish, "1,5 МБ" in Russian).
+export function formatFileSize(bytes) {
+  const lang = (currentLanguage && get(currentLanguage)?.code) || 'en-US';
+  const i = bytes ? Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), FILE_SIZE_UNITS.length - 1) : 0;
+  const value = bytes ? bytes / Math.pow(1024, i) : 0;
+  try {
+    return new Intl.NumberFormat(lang, {
+      style: 'unit',
+      unit: FILE_SIZE_UNITS[i],
+      unitDisplay: 'short',
+      maximumFractionDigits: 1,
+    }).format(value);
+  } catch (e) {
+    return parseFloat(value.toFixed(1)) + ' ' + ['B', 'KB', 'MB', 'GB'][i];
+  }
+}
 
 // Success/failure colouring for this plugin's toasts, matching the panel. showToast from
 // @panomc/sdk/toasts is the host panel's ToastContainer `show`, whose signature is

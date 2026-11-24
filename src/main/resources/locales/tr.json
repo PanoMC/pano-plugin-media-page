@@ -16,12 +16,12 @@
   "media-pages": {
     "list": {
       "title": "Medya Sayfaları",
-      "total-count": "{count} Medya Sayfası",
+      "total-count": "{count} medya sayfası",
       "add-page": "Sayfa Oluştur",
       "table": {
         "id": "ID",
         "title": "Başlık",
-        "slug": "URL Slug",
+        "slug": "URL adı",
         "status": "Durum",
         "actions": "İşlemler",
         "actions-edit": "Düzenle",
@@ -37,9 +37,12 @@
       "edit-title": "Medya Sayfasını Düzenle",
       "back": "Medya Sayfaları",
       "save": "Kaydet",
+      "drag-category": "Sıralamak için sürükleyin",
+      "drag-media": "Medyayı sıralamak için sürükleyin",
+      "video": "Video",
       "fields": {
         "title": "Sayfa Başlığı",
-        "slug": "URL Slug",
+        "slug": "URL adı",
         "description": "Açıklama",
         "active": "Aktif",
         "register-to-nav": "Navigasyonda Göster"
@@ -53,7 +56,7 @@
         "empty-hint": "Henüz kategori eklenmedi. Sayfayı oluştururken aynı anda kategorileri de ekleyebilirsiniz.",
         "cat-title": "Kategori Başlığı",
         "cat-title-placeholder": "Örn: Yaz Etkinliği",
-        "cat-description": "Açıklama (İsteğe bağlı)",
+        "cat-description": "Açıklama (isteğe bağlı)",
         "cat-description-placeholder": "Bu kategori için kısa bir açıklama",
         "save-first-hint": "Medya yüklemek için önce sayfayı kaydedin."
       },
@@ -69,11 +72,12 @@
     }
   },
   "errors": {
-    "SLUG_ALREADY_EXISTS": "Bu slug'a sahip bir medya sayfası zaten mevcut.",
+    "SLUG_ALREADY_EXISTS": "Bu URL adına sahip bir medya sayfası zaten var.",
     "ERROR_UNKNOWN": "Bilinmeyen hata",
     "ERROR_GENERAL": "Beklenmedik bir hata oluştu. Lütfen daha sonra tekrar deneyiniz."
   },
   "modals": {
+    "close": "Kapat",
     "delete-page": {
       "description": "<b>{title}</b> isimli medya sayfasını silmek istediğinizden emin misiniz? Bu sayfadaki tüm kategoriler ve medya öğeleri de silinecektir. Bu işlem geri alınamaz.",
       "confirm": "Sil",
@@ -83,7 +87,7 @@
       "title": "Kategori Ekle",
       "fields": {
         "title": "Kategori Başlığı",
-        "description": "Açıklama (opsiyonel)"
+        "description": "Açıklama (isteğe bağlı)"
       },
       "save": "Ekle",
       "cancel": "İptal"
@@ -92,7 +96,7 @@
       "title": "Kategoriyi Düzenle",
       "fields": {
         "title": "Kategori Başlığı",
-        "description": "Açıklama (opsiyonel)"
+        "description": "Açıklama (isteğe bağlı)"
       },
       "save": "Kaydet",
       "cancel": "İptal"
@@ -119,9 +123,9 @@
     "upload-media": {
       "title": "Medya Yükle",
       "fields": {
-        "title": "Başlık (opsiyonel)",
+        "title": "Başlık (isteğe bağlı)",
         "title-placeholder": "Medya için bir başlık girin...",
-        "description": "Açıklama (opsiyonel)",
+        "description": "Açıklama (isteğe bağlı)",
         "description-placeholder": "Bir açıklama girin..."
       },
       "drop-label": "Dosyaları sürükleyip bırakın veya göz atmak için tıklayın",
@@ -154,5 +158,11 @@
     "error-saving": "Kaydederken hata oluştu: {error}",
     "error-deleting": "Silinirken hata oluştu: {error}",
     "error-uploading": "Yüklenirken hata oluştu: {error}"
+  },
+  "gallery": {
+    "video": "Video",
+    "previous": "Önceki",
+    "next": "Sonraki",
+    "close": "Kapat"
   }
 }

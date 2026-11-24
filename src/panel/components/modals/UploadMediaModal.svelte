@@ -84,7 +84,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">{$_('modals.upload-media.title')}</h5>
-        <button type="button" class="btn-close" on:click={hide} aria-label="Close"></button>
+        <button type="button" class="btn-close" on:click={hide} aria-label={$_('modals.close')}></button>
       </div>
       <div class="modal-body">
         <!-- Optional Title & Description -->
@@ -240,7 +240,7 @@
 </script>
 
 <script>
-  import { _, pluginId, showSuccessToast, showErrorToast } from '../../../main';
+  import { _, pluginId, showSuccessToast, showErrorToast, translateError, generalError, formatFileSize } from '../../../main';
 
   let uploading = false;
   let uploadProgress = 0;
@@ -299,14 +299,6 @@
     return previewUrls[index];
   }
 
-  function formatFileSize(bytes) {
-    if (!bytes) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
-  }
-
   async function onUpload() {
     if (selectedFiles.length === 0) return;
 
@@ -335,7 +327,7 @@
       });
 
       if (result && result.error) {
-        showErrorToast(`plugins.${pluginId}.toasts.error-uploading`, { error: result.error.message || result.error.code });
+        showErrorToast(`plugins.${pluginId}.toasts.error-uploading`, { error: translateError(result.error) });
       } else {
         const responseData = result?.data || result || {};
         const newItems = responseData.items || [];
@@ -353,7 +345,7 @@
     } catch (e) {
       console.error(e);
       showErrorToast(`plugins.${pluginId}.toasts.error-uploading`, {
-        error: $_(`plugins.${pluginId}.errors.ERROR_GENERAL`),
+        error: generalError(),
       });
     } finally {
       uploading = false;

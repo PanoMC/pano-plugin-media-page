@@ -10,7 +10,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">{$_('modals.move-category.title')}</h5>
-        <button type="button" class="btn-close" on:click={hide} aria-label="Close"></button>
+        <button type="button" class="btn-close" on:click={hide} aria-label={$_('modals.close')}></button>
       </div>
       <div class="modal-body text-first-capitalize">
         <p>
@@ -84,7 +84,7 @@
 
 <script>
   import { onMount } from 'svelte';
-  import { _, pluginId, showSuccessToast, showErrorToast } from '../../../main';
+  import { _, pluginId, showSuccessToast, showErrorToast, translateError, generalError } from '../../../main';
   import { escapeHtml } from '../../escapeHtml.js';
 
   let loading = false;
@@ -127,12 +127,12 @@
         hide();
       } else {
         showErrorToast(`plugins.${pluginId}.toasts.error-saving`, {
-          error: result?.error?.message || result?.error?.code || 'Unknown error',
+          error: translateError(result?.error),
         });
       }
     } catch (e) {
       console.error(e);
-      showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: 'An error occurred' });
+      showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: generalError() });
     } finally {
       moving = false;
     }

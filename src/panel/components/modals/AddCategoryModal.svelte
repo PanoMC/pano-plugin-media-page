@@ -4,7 +4,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">{$_('modals.add-category.title')}</h5>
-        <button type="button" class="btn-close" on:click={hide} aria-label="Close"></button>
+        <button type="button" class="btn-close" on:click={hide} aria-label={$_('modals.close')}></button>
       </div>
       <div class="modal-body">
         <div class="mb-3">
@@ -60,7 +60,7 @@
 </script>
 
 <script>
-  import { _, pluginId, showSuccessToast, showErrorToast } from '../../../main';
+  import { _, pluginId, showSuccessToast, showErrorToast, translateError, generalError } from '../../../main';
 
   let loading = false;
   let title = '';
@@ -83,7 +83,7 @@
       });
 
       if (result.error) {
-        showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: result.error.message || result.error.code });
+        showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: translateError(result.error) });
       } else {
         const data = result.data || result;
         callback({ id: data.id, pageId, title, description, sortOrder: 0 });
@@ -95,7 +95,7 @@
     } catch (e) {
       console.error(e);
       showErrorToast(`plugins.${pluginId}.toasts.error-saving`, {
-        error: 'An error occurred',
+        error: generalError(),
       });
     } finally {
       loading = false;

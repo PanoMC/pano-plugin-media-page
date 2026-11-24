@@ -31,7 +31,7 @@
                       <i class="fas fa-play"></i>
                     </div>
                     <span class="media-page-gallery-page__badge badge position-absolute bottom-0 end-0 m-2">
-                      <i class="fas fa-video me-1"></i>Video
+                      <i class="fas fa-video me-1"></i>{$_('gallery.video')}
                     </span>
                   </div>
                 {/if}
@@ -65,15 +65,15 @@
 <!-- Lightbox -->
 {#if lightboxItem}
   <div class="media-page-gallery-page media-page-gallery-page__lightbox" on:click={closeLightbox} transition:fade={{ duration: 200 }}>
-    <button type="button" class="media-page-gallery-page__lightbox-nav media-page-gallery-page__nav-prev" on:click|stopPropagation={prevMedia} aria-label="Previous">
+    <button type="button" class="media-page-gallery-page__lightbox-nav media-page-gallery-page__nav-prev" on:click|stopPropagation={prevMedia} aria-label={$_('gallery.previous')}>
       <i class="fas fa-chevron-left"></i>
     </button>
     
-    <button type="button" class="media-page-gallery-page__lightbox-nav media-page-gallery-page__nav-next" on:click|stopPropagation={nextMedia} aria-label="Next">
+    <button type="button" class="media-page-gallery-page__lightbox-nav media-page-gallery-page__nav-next" on:click|stopPropagation={nextMedia} aria-label={$_('gallery.next')}>
       <i class="fas fa-chevron-right"></i>
     </button>
 
-    <button type="button" class="media-page-gallery-page__lightbox-close" on:click={closeLightbox} aria-label="Close">
+    <button type="button" class="media-page-gallery-page__lightbox-close" on:click={closeLightbox} aria-label={$_('gallery.close')}>
       <i class="fas fa-times"></i>
     </button>
 
@@ -384,6 +384,12 @@
   import { onMount } from 'svelte';
   import { NoContent } from '@panomc/sdk/components/theme';
   import { fade } from 'svelte/transition';
+  import { derived } from 'svelte/store';
+  import { _ as i18n } from 'svelte-i18n';
+
+  // Views may not import ../../main (plugin-kit rule V1), so the plugin prefix lives here.
+  const pluginId = 'pano-plugin-media-page';
+  const _ = derived(i18n, ($t) => (key, options) => $t(`plugins.${pluginId}.${key}`, options));
 
   export let data;
 

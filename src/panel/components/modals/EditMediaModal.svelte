@@ -4,7 +4,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">{$_('modals.edit-media.title')}</h5>
-        <button type="button" class="btn-close" on:click={hide} aria-label="Close"></button>
+        <button type="button" class="btn-close" on:click={hide} aria-label={$_('modals.close')}></button>
       </div>
       <div class="modal-body">
         {#if $item.type === 'IMAGE' && ($item.thumbnailPath || $item.filePath)}
@@ -87,7 +87,7 @@
 </script>
 
 <script>
-  import { _, pluginId, showSuccessToast, showErrorToast } from '../../../main';
+  import { _, pluginId, showSuccessToast, showErrorToast, translateError, generalError, formatFileSize } from '../../../main';
 
   let loading = false;
   let title = '';
@@ -100,14 +100,6 @@
 
   $: hasChanges = title !== ($item.title || '') || description !== ($item.description || '');
 
-  function formatFileSize(bytes) {
-    if (!bytes) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
-  }
-
   async function onSave() {
     loading = true;
     try {
@@ -117,7 +109,7 @@
       });
 
       if (result.error) {
-        showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: result.error.message || result.error.code });
+        showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: translateError(result.error) });
       } else {
         callback({ ...$item, title, description });
         showSuccessToast(`plugins.${pluginId}.toasts.media-updated`);
@@ -125,7 +117,7 @@
       }
     } catch (e) {
       console.error(e);
-      showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: 'An error occurred' });
+      showErrorToast(`plugins.${pluginId}.toasts.error-saving`, { error: generalError() });
     } finally {
       loading = false;
     }

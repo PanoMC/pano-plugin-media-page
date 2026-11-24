@@ -48,7 +48,7 @@
 </script>
 
 <script>
-  import { _, pluginId, showSuccessToast, showErrorToast } from '../../../main';
+  import { _, pluginId, showSuccessToast, showErrorToast, translateError, generalError } from '../../../main';
   import { escapeHtml } from '../../escapeHtml.js';
   let loading = false;
 
@@ -60,7 +60,7 @@
       });
 
       if (result.error) {
-        showErrorToast(`plugins.${pluginId}.toasts.error-deleting`, { error: result.error.message || result.error.code });
+        showErrorToast(`plugins.${pluginId}.toasts.error-deleting`, { error: translateError(result.error) });
       } else {
         showSuccessToast(`plugins.${pluginId}.toasts.media-deleted`);
         callback(get(item));
@@ -68,7 +68,7 @@
       }
     } catch (e) {
       console.error(e);
-      showErrorToast(`plugins.${pluginId}.toasts.error-deleting`, { error: 'An error occurred' });
+      showErrorToast(`plugins.${pluginId}.toasts.error-deleting`, { error: generalError() });
     } finally {
       loading = false;
     }
